@@ -92,6 +92,18 @@ a.tile:hover{filter:brightness(.97)}
 .mapctl button{width:40px;height:40px;border:0;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(1,46,69,.18);font-size:22px;font-weight:700;color:var(--ink)}
 .attrib{position:absolute;right:20px;bottom:16px;font-size:11px;background:rgba(255,255,255,.85);border-radius:6px;padding:1px 6px;color:var(--muted)}
 .card.ag{border:1px solid var(--red)}
+.mgr{background:var(--card);border-radius:26px;padding:22px 24px;display:flex;flex-direction:column;gap:14px}
+.mgr.cmp{background:none;padding:0}
+.mgrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.mg{background:var(--surface);border-radius:16px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.mg-n{font-weight:700;grid-column:1/-1}
+.mg-t{color:var(--blue);font-weight:700;font-size:17px;text-decoration:none;user-select:all}
+.mg-c{border:0;background:var(--blue-soft);color:var(--blue);border-radius:10px;padding:5px 10px;font-size:12.5px;font-weight:700}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.cgrid div{background:var(--surface);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.cgrid small{color:var(--muted);font-size:12.5px}
+.cgrid a{color:var(--blue);font-weight:700;text-decoration:none;font-size:16px}
+.sel-t{user-select:all;font-weight:700}
 .pline.book{background:var(--blue-soft);border-radius:12px;padding:8px 12px;margin-bottom:6px;color:var(--ink)}
 .pline.book b{color:var(--blue)}
 .nav a.sub.agn{background:var(--red);color:#fff;font-weight:700;margin:1px 0}
@@ -544,6 +556,32 @@ const app = document.getElementById('app');
 /* Скидка агента по датам (по московскому времени) */
 const AG_SCHED=[["2026-11-28",3],["2026-12-04",2.5],["2026-12-07",2],["2026-12-10",1.5],["2026-12-14",1],["2026-12-17",0.5],["2026-12-20",0]];
 const AG_TODAY=(()=>{try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}catch(e){return new Date().toISOString().slice(0,10)}})();
+/* Контакты отдела продаж Брусники (по документу от 30.10.26) */
+const MGR={
+  metronom:[['Шмель Андрей','89254861063'],['Донич Диана','89254484758'],['Семенков Игорь','89253008531']],
+  mons:[['Устинов Всеволод','89253809641'],['Новикова Александра','89254868370'],['Яворская Мария','89260606044']],
+  perviy:[['Титомир Елена','89260232029'],['Спесивцев Эдуард','89260233411'],['Татаринцев Егор','89260036115'],['Сафонов Дмитрий','89256623560'],['Калантарян Армен','89252632532'],['Кораблинова Надежда','89252234002']],
+  belata:[['Семенков Игорь','89253008531'],['Абылкасова Наргиз','89253007543'],['Перчун Захар','89256292374'],['Кириллова Светлана','89255071634']],
+  izdanie:[['Вазарцев Антон','89251374168'],['Чанова Юлия','89259981823'],['Черепов Андрей','89260329360']],
+  gertzena:[['Левин Артем','89261204108'],['Шевченко Константин','89254952239'],['Пискунов Андрей','89253133288']],
+  'dom-a':[['Денисов Алексей','89022584010'],['Заев Александр','89250517047']],
+  'rublevskie-dvory':[['Донич Диана','89254484758'],['Омельченко Валерий','89254091930'],['Попов Алексей','89254051902']]
+};
+const telFmt=n=>`+7 ${n.slice(1,4)} ${n.slice(4,7)}-${n.slice(7,9)}-${n.slice(9,11)}`;
+const telHref=n=>'tel:+7'+n.slice(1);
+function mgrHtml(slug,compact){
+  const L=MGR[slug]||[]; if(!L.length) return '';
+  return `<section class="mgr${compact?' cmp':''}"><div class="sechead" style="padding:0"><h2>${compact?'Менеджеры ЖК':'Менеджеры отдела продаж'}</h2><span class="fine">Звоните, чтобы записать клиента на встречу или уточнить квартиру</span></div>
+  <div class="mgrs">${L.map(([n,t])=>`<div class="mg"><div class="mg-n">${esc(n)}</div><a class="mg-t num" href="${telHref(t)}">${telFmt(t)}</a><button type="button" class="mg-c" data-copy="${telFmt(t)}" aria-label="Скопировать номер ${esc(n)}">Копировать</button></div>`).join('')}</div></section>`;
+}
+const COMMON=`<section class="panel"><h3>Общие контакты Брусники</h3><div class="cgrid">
+  <div><small>Центральный офис продаж</small><b>Антонова Дарья</b><a class="num" href="tel:+79257289388">+7 925 728-93-88</a></div>
+  <div><small>Коммерческая недвижимость</small><b>Иванова Мария</b><a class="num" href="tel:+79260140954">+7 926 014-09-54</a></div>
+  <div><small>Единый контакт-центр · 9:00–21:00 МСК ежедневно</small><a class="num" href="tel:+74950237629">+7 495 023-76-29</a><span>Telegram: @brusnikachat_bot</span></div>
+  <div><small>Отдел сопровождения продаж</small><span class="sel-t">regbrusnika@brusnika.ru</span></div>
+  <div><small>Актирование и выплаты</small><span class="sel-t">oplatamsk@brusnika.ru</span></div>
+  <div><small>Отдел партнёрских продаж</small><span class="sel-t">partnermsk@brusnika.ru</span><span>Telegram-канал: @brusnikamscw</span></div>
+</div></section>`;
 const BOOK = slug => (slug==='mons'||slug==='izdanie') ? 50000 : 30000;
 const AGENT=(()=>{let v=3; for(const [d,pc] of AG_SCHED) if(AG_TODAY>=d) v=pc; return v;})();
 const AGS=String(AGENT).replace('.',',');
@@ -620,7 +658,7 @@ function popHtml(p){
   const ag = p.slug==='izdanie'&&AGENT>0?`<span class="tg ag">Скидка ${AGS}% · дом 1</span>`:agentOk(p.slug)?`<span class="tg ag">Скидка агента ${AGS}%</span>`:'';
   return `<div class="lpop"><span class="eyebrow" style="font-size:12px">${esc(p.place)}</span><b class="lpn">${esc(p.name)}</b>
     <div class="metro">${p.metro.map(m=>`<span><i style="background:${m[1]}"></i>${m[0]}</span>`).join('')}</div>
-    <div class="lpf num"><div><small>Цена от</small><b>${mln(st.min)} млн ₽</b></div><div><small>В продаже</small><b>${st.n} кв.</b></div><div><small>Бронь</small><b>${fmt(BOOK(p.slug))}</b></div><div><small>Сдача</small><b>${st.del.map(d=>d.replace(' квартал',' кв.')).join(', ')}</b></div></div>
+    <div class="lpf num"><div><small>Цена от</small><b>${mln(st.min)} млн ₽</b></div><div><small>В продаже</small><b>${st.n} кв.</b></div><div><small>Бронь · 10 дней</small><b>${fmt(BOOK(p.slug))}</b></div><div><small>Сдача</small><b>${st.del.map(d=>d.replace(' квартал',' кв.')).join(', ')}</b></div></div>
     <div class="chips">${ag}${(HOOK[p.slug]||[]).slice(0,2).map(h=>`<span class="tg b">${h}</span>`).join('')}</div>
     <div class="pbtns"><a class="btn btn-main" href="#p-${p.slug}">Квартиры ›</a><button class="btn btn-soft" data-tf="${p.slug}">Условия</button></div></div>`;
 }
@@ -711,7 +749,7 @@ function pcard(p){
       <div><small>Цена от</small><b>${st?mln(st.min)+' млн ₽':mln(p.from)+' млн ₽'}</b></div>
       <div><small>Срок сдачи</small><b>${st?st.del.map(d=>d.replace(' квартал',' кв.')).join(', '):p.del.replace(' квартал',' кв.')}</b></div>
       ${st?`<div><small>За м² от</small><b>${fmt(st.ppm)}</b></div><div><small>С акцией сайта</small><b>${st.promo} кв.</b></div>`:''}
-      <div><small>Стоимость брони</small><b>${fmt(BOOK(p.slug))}</b></div>
+      <div><small>Бронь · срок 10 дней</small><b>${fmt(BOOK(p.slug))}</b></div>
     </div>
     ${st?`<div class="rooms">${st.rooms.map(([r,n])=>`<span>${r===4?'4С+':RT_SHORT(r)} · ${n}</span>`).join('')}</div>`:''}
     <div class="chips">${p.slug==='izdanie'&&AGENT>0?`<span class="tg ag">Скидка ${AGS}% · только дом 1</span>`:agentOk(p.slug)?`<span class="tg ag">Скидка агента ${AGS}%</span>`:`<span class="tg g">Без скидки агента</span>`}${HOOK[p.slug].map((h,i)=>`<span class="tg${i?' b':''}">${h}</span>`).join('')}</div>
@@ -755,7 +793,7 @@ function projHead(slug,p,L,st,blds,terms){
         <span class="eyebrow">${esc(p.name)} · ${esc(p.place.startsWith('МО')?'Московская область':'Москва')}</span>
         <h1 class="h-big">Квартиры в наличии</h1>
         <p>${esc(p.place.replace(/^Москва, |^МО, /,''))}, ${p.place.startsWith('МО')?'Московская область':'Москва'} · ${p.metro.map(m=>m[0]).join(', ')}</p>
-        <p>Квартиры ${blds.length>1?'в корпусах '+bl:'в корпусе '+bl} · ${st.n} в продаже · от ${mln(st.min)} млн ₽ · бронь ${fmt(BOOK(slug))}</p>
+        <p>Квартиры ${blds.length>1?'в корпусах '+bl:'в корпусе '+bl} · ${st.n} в продаже · от ${mln(st.min)} млн ₽ · бронь ${fmt(BOOK(slug))} на 10 дней</p>
         <p class="terms-line">${[...new Set(terms)].join(' · ')||'Условия реализации уточняются'} · без удорожания</p>
       </div>
       <div class="phead-stats num">
@@ -816,6 +854,7 @@ function projectView(slug){
   const terms=[]; T.forEach(s=>s.cards.forEach(c=>{if(c.p.includes(slug)) terms.push(s.sec)}));
   app.innerHTML = `
   ${projHead(slug,p,L,st,blds,terms)}
+  ${mgrHtml(slug)}
   <div id="flist" class="sechead"><h2>Выберите квартиру</h2><span class="fine">${esc(p.name)} · цены сайта на ${DATE}</span></div>
   <section class="filters">
     ${chip('room','all','Все',L.length)}
@@ -997,7 +1036,7 @@ function pdfHtml(f){
     <div class="pd-flat"><div class="pd-plan">${f.img&&PL[f.img]?`<img src="${PL[f.img]}" alt="">`:'<span>Планировка — на сайте застройщика</span>'}</div>
       <div class="pd-info"><div class="pd-ft">${RT(f.r)}, ${area(f.a)}</div>
         <div class="pd-kv"><div><small>Этаж</small><b>${f.fl} из ${f.ff}</b></div><div><small>Площадь</small><b>${area(f.a)}</b></div><div><small>За м²</small><b>${fmt(Math.round((f.ag||f.final)/f.a))}</b></div></div>
-        <div class="pd-prices">${pr('Стоимость брони',fmt(BOOK(p.slug)))}${pr('Базовая цена',`<s>${fmt(f.base)}</s>`)}${pr('Цена сайта со скидкой',fmt(f.site),'red')}${f.promo?pr(f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd),fmt(f.promo)):''}
+        <div class="pd-prices">${pr('Стоимость брони (срок 10 дней)',fmt(BOOK(p.slug)))}${pr('Базовая цена',`<s>${fmt(f.base)}</s>`)}${pr('Цена сайта со скидкой',fmt(f.site),'red')}${f.promo?pr(f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd),fmt(f.promo)):''}
           ${f.ag?pr(`Цена со скидкой агента ${AGS}%`,fmt(f.ag),'ag'):pr('Итоговая цена',fmt(f.final),'fin')}</div>
         ${f.bk?'<div class="warn">Квартира забронирована на сайте застройщика.</div>':''}</div></div>
     ${CALC_FOR(f)?`<div class="pd-h">Расчёты</div>${calcHtml(f,true)}`:''}
@@ -1062,7 +1101,7 @@ function detail(f){
       </div>
       ${f.tags.length?`<div class="chips">${f.tags.map(t=>`<span class="tg g">${esc(t)}</span>`).join('')}</div>`:''}
       <div class="pbox num">
-        <div class="pline book"><span>Стоимость брони</span><b>${fmt(BOOK(p.slug))}</b></div>
+        <div class="pline book"><span>Стоимость брони · срок 10 дней</span><b>${fmt(BOOK(p.slug))}</b></div>
         <div class="pline"><span>Базовая цена сайта</span><s class="black">${fmt(f.base)}</s></div>
         <div class="pline"><span>Цена сайта со скидкой</span><b class="red">${fmt(f.site)}</b></div>
         ${f.promo?`<div class="pline"><span>${f.pt==='anti_auction'?'Антиаукцион (цена снижается)':'Акция сайта до '+ddmm(f.pd)}</span><b class="black">−${fmt(f.site-f.promo)}</b></div>`:''}
@@ -1074,6 +1113,7 @@ function detail(f){
       <div class="calchead"><h3>Расчёты по квартире</h3><div class="pdfrow"><button type="button" class="btn btn-main" id="pdfbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>Сохранить расчёт в PDF</button><span class="pdfmsg" id="pdfmsg" role="status"></span></div></div>
       ${CALC_FOR(f)?`<div id="calcbox">${calcHtml(f)}</div>`:`<div class="soon">Расчёты для этой квартиры пока не заданы. Сейчас они есть для квартир Издания, МОНС, Герцена (дом 2) и Первого квартала.</div>`}
     </div>
+    <div class="panel full">${mgrHtml(p.slug,true)}</div>
     <div class="panel full">
       <h3>Условия реализации для этой квартиры</h3>
       ${tc.length?`<div class="cards">${tc.map(([s,c])=>termCard(Object.assign({},c,{who:s+' · '+c.who}))).join('')}</div>`:`<p class="intro">Для этого проекта условия ещё не внесены.</p>`}
@@ -1116,13 +1156,15 @@ function terms(){
   </tbody></table></div><span class="fine">Скидка пересчитывается автоматически по дате (московское время).</span></section>
   <section class="filters">${opts.map(([v,n])=>`<button class="chip" data-t="${v}" aria-pressed="${tfilter===v}">${n}</button>`).join('')}</section>
   ${secs.map(block).join('')}
-  <div class="note"><b>Индивидуально</b> можно попробовать согласовать отложенный первоначальный взнос до 45 дней.</div>`;
+  <div class="note"><b>Индивидуально</b> можно попробовать согласовать отложенный первоначальный взнос до 45 дней.</div>
+  ${COMMON}`;
   app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tfilter=b.dataset.t;terms()});
   app.querySelectorAll('.blkjump').forEach(b=>b.onclick=()=>{const el=document.getElementById('blk-'+b.dataset.blk); if(el) el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})});
 }
 
 /* ---------- routing ---------- */
 document.addEventListener('click',e=>{
+  const cp=e.target.closest('[data-copy]'); if(cp){ const v=cp.dataset.copy, ok=()=>{cp.textContent='Скопировано'; setTimeout(()=>cp.textContent='Копировать',1800)}; try{navigator.clipboard.writeText(v).then(ok,()=>{cp.textContent=v})}catch(_){cp.textContent=v} return; }
   const hm=e.target.closest('a[href="#home"]'); if(hm){e.preventDefault(); const lw=document.getElementById('lwrap'); if(lw&&lw.classList.contains('on')) document.getElementById('lfull').click(); if(location.hash==='#home'||location.hash===''){render(); scrollTo(0,0);} else location.hash='home'; return;}
   const tf=e.target.closest('[data-tf]'); if(tf){tfilter=tf.dataset.tf; if(location.hash==='#terms') terms(); else location.hash='terms'; return;}
   const s=e.target.closest('[data-sel]'); if(s){selectProj(s.dataset.sel);}
