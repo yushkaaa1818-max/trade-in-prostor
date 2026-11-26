@@ -93,6 +93,9 @@ a.tile:hover{filter:brightness(.97)}
 .attrib{position:absolute;right:20px;bottom:16px;font-size:11px;background:rgba(255,255,255,.85);border-radius:6px;padding:1px 6px;color:var(--muted)}
 .card.ag{border:1px solid var(--red)}
 .mgr{background:var(--card);border-radius:26px;padding:22px 24px;display:flex;flex-direction:column;gap:14px}
+.mg-sub{font-weight:700;font-size:14px;color:var(--muted);margin-top:2px}
+.mg.pt{background:var(--blue-soft)}
+.mg-r{font-weight:400;font-size:12px;color:var(--blue);margin-left:4px}
 .mgr.cmp{background:none;padding:0}
 .mgrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
 .mg{background:var(--surface);border-radius:16px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
@@ -567,12 +570,15 @@ const MGR={
   'dom-a':[['Денисов Алексей','89022584010'],['Заев Александр','89250517047']],
   'rublevskie-dvory':[['Донич Диана','89254484758'],['Омельченко Валерий','89254091930'],['Попов Алексей','89254051902']]
 };
+const PARTNER=[['Храмов Михаил','89250704840'],['Сало Антон','89659759883']];
 const telFmt=n=>`+7 ${n.slice(1,4)} ${n.slice(4,7)}-${n.slice(7,9)}-${n.slice(9,11)}`;
 const telHref=n=>'tel:+7'+n.slice(1);
+const mgCard=([n,t],pt)=>`<div class="mg${pt?' pt':''}"><div class="mg-n">${esc(n)}</div><a class="mg-t num" href="${telHref(t)}">${telFmt(t)}</a><button type="button" class="mg-c" data-copy="${telFmt(t)}" aria-label="Скопировать номер ${esc(n)}">Копировать</button></div>`;
 function mgrHtml(slug,compact){
   const L=MGR[slug]||[]; if(!L.length) return '';
   return `<section class="mgr${compact?' cmp':''}"><div class="sechead" style="padding:0"><h2>${compact?'Менеджеры ЖК':'Менеджеры отдела продаж'}</h2><span class="fine">Звоните, чтобы записать клиента на встречу или уточнить квартиру</span></div>
-  <div class="mgrs">${L.map(([n,t])=>`<div class="mg"><div class="mg-n">${esc(n)}</div><a class="mg-t num" href="${telHref(t)}">${telFmt(t)}</a><button type="button" class="mg-c" data-copy="${telFmt(t)}" aria-label="Скопировать номер ${esc(n)}">Копировать</button></div>`).join('')}</div></section>`;
+  <div class="mgrs">${L.map(x=>mgCard(x)).join('')}</div>
+  <div class="mg-sub">Отдел партнёрских продаж</div><div class="mgrs">${PARTNER.map(x=>mgCard(x,true)).join('')}</div></section>`;
 }
 const COMMON=`<section class="panel"><h3>Общие контакты Брусники</h3><div class="cgrid">
   <div><small>Центральный офис продаж</small><b>Антонова Дарья</b><a class="num" href="tel:+79257289388">+7 925 728-93-88</a></div>
@@ -580,7 +586,7 @@ const COMMON=`<section class="panel"><h3>Общие контакты Брусн�
   <div><small>Единый контакт-центр · 9:00–21:00 МСК ежедневно</small><a class="num" href="tel:+74950237629">+7 495 023-76-29</a><span>Telegram: @brusnikachat_bot</span></div>
   <div><small>Отдел сопровождения продаж</small><span class="sel-t">regbrusnika@brusnika.ru</span></div>
   <div><small>Актирование и выплаты</small><span class="sel-t">oplatamsk@brusnika.ru</span></div>
-  <div><small>Отдел партнёрских продаж</small><span class="sel-t">partnermsk@brusnika.ru</span><span>Telegram-канал: @brusnikamscw</span></div>
+  <div><small>Отдел партнёрских продаж</small><b>Храмов Михаил</b><a class="num" href="tel:+79250704840">+7 925 070-48-40</a><b>Сало Антон</b><a class="num" href="tel:+79659759883">+7 965 975-98-83</a><span class="sel-t">partnermsk@brusnika.ru</span><span>Telegram-канал: @brusnikamscw</span></div>
 </div></section>`;
 const BOOK = slug => (slug==='mons'||slug==='izdanie') ? 50000 : 30000;
 const AGENT=(()=>{let v=3; for(const [d,pc] of AG_SCHED) if(AG_TODAY>=d) v=pc; return v;})();
