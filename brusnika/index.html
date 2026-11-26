@@ -92,6 +92,8 @@ a.tile:hover{filter:brightness(.97)}
 .mapctl button{width:40px;height:40px;border:0;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(1,46,69,.18);font-size:22px;font-weight:700;color:var(--ink)}
 .attrib{position:absolute;right:20px;bottom:16px;font-size:11px;background:rgba(255,255,255,.85);border-radius:6px;padding:1px 6px;color:var(--muted)}
 .card.ag{border:1px solid var(--red)}
+.pline.book{background:var(--blue-soft);border-radius:12px;padding:8px 12px;margin-bottom:6px;color:var(--ink)}
+.pline.book b{color:var(--blue)}
 .nav a.sub.agn{background:var(--red);color:#fff;font-weight:700;margin:1px 0}
 .nav a.sub.agn i{background:#fff;color:var(--red)}
 .nav a.sub.agn:hover{background:#b8102f}
@@ -542,6 +544,7 @@ const app = document.getElementById('app');
 /* Скидка агента по датам (по московскому времени) */
 const AG_SCHED=[["2026-11-28",3],["2026-12-04",2.5],["2026-12-07",2],["2026-12-10",1.5],["2026-12-14",1],["2026-12-17",0.5],["2026-12-20",0]];
 const AG_TODAY=(()=>{try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}catch(e){return new Date().toISOString().slice(0,10)}})();
+const BOOK = slug => (slug==='mons'||slug==='izdanie') ? 50000 : 30000;
 const AGENT=(()=>{let v=3; for(const [d,pc] of AG_SCHED) if(AG_TODAY>=d) v=pc; return v;})();
 const AGS=String(AGENT).replace('.',',');
 const AG_NEXT=AG_SCHED.find(([d,pc])=>d>AG_TODAY&&pc!==AGENT);
@@ -617,7 +620,7 @@ function popHtml(p){
   const ag = p.slug==='izdanie'&&AGENT>0?`<span class="tg ag">Скидка ${AGS}% · дом 1</span>`:agentOk(p.slug)?`<span class="tg ag">Скидка агента ${AGS}%</span>`:'';
   return `<div class="lpop"><span class="eyebrow" style="font-size:12px">${esc(p.place)}</span><b class="lpn">${esc(p.name)}</b>
     <div class="metro">${p.metro.map(m=>`<span><i style="background:${m[1]}"></i>${m[0]}</span>`).join('')}</div>
-    <div class="lpf num"><div><small>Цена от</small><b>${mln(st.min)} млн ₽</b></div><div><small>В продаже</small><b>${st.n} кв.</b></div><div><small>Сдача</small><b>${st.del.map(d=>d.replace(' квартал',' кв.')).join(', ')}</b></div></div>
+    <div class="lpf num"><div><small>Цена от</small><b>${mln(st.min)} млн ₽</b></div><div><small>В продаже</small><b>${st.n} кв.</b></div><div><small>Бронь</small><b>${fmt(BOOK(p.slug))}</b></div><div><small>Сдача</small><b>${st.del.map(d=>d.replace(' квартал',' кв.')).join(', ')}</b></div></div>
     <div class="chips">${ag}${(HOOK[p.slug]||[]).slice(0,2).map(h=>`<span class="tg b">${h}</span>`).join('')}</div>
     <div class="pbtns"><a class="btn btn-main" href="#p-${p.slug}">Квартиры ›</a><button class="btn btn-soft" data-tf="${p.slug}">Условия</button></div></div>`;
 }
@@ -708,6 +711,7 @@ function pcard(p){
       <div><small>Цена от</small><b>${st?mln(st.min)+' млн ₽':mln(p.from)+' млн ₽'}</b></div>
       <div><small>Срок сдачи</small><b>${st?st.del.map(d=>d.replace(' квартал',' кв.')).join(', '):p.del.replace(' квартал',' кв.')}</b></div>
       ${st?`<div><small>За м² от</small><b>${fmt(st.ppm)}</b></div><div><small>С акцией сайта</small><b>${st.promo} кв.</b></div>`:''}
+      <div><small>Стоимость брони</small><b>${fmt(BOOK(p.slug))}</b></div>
     </div>
     ${st?`<div class="rooms">${st.rooms.map(([r,n])=>`<span>${r===4?'4С+':RT_SHORT(r)} · ${n}</span>`).join('')}</div>`:''}
     <div class="chips">${p.slug==='izdanie'&&AGENT>0?`<span class="tg ag">Скидка ${AGS}% · только дом 1</span>`:agentOk(p.slug)?`<span class="tg ag">Скидка агента ${AGS}%</span>`:`<span class="tg g">Без скидки агента</span>`}${HOOK[p.slug].map((h,i)=>`<span class="tg${i?' b':''}">${h}</span>`).join('')}</div>
@@ -751,7 +755,7 @@ function projHead(slug,p,L,st,blds,terms){
         <span class="eyebrow">${esc(p.name)} · ${esc(p.place.startsWith('МО')?'Московская область':'Москва')}</span>
         <h1 class="h-big">Квартиры в наличии</h1>
         <p>${esc(p.place.replace(/^Москва, |^МО, /,''))}, ${p.place.startsWith('МО')?'Московская область':'Москва'} · ${p.metro.map(m=>m[0]).join(', ')}</p>
-        <p>Квартиры ${blds.length>1?'в корпусах '+bl:'в корпусе '+bl} · ${st.n} в продаже · от ${mln(st.min)} млн ₽</p>
+        <p>Квартиры ${blds.length>1?'в корпусах '+bl:'в корпусе '+bl} · ${st.n} в продаже · от ${mln(st.min)} млн ₽ · бронь ${fmt(BOOK(slug))}</p>
         <p class="terms-line">${[...new Set(terms)].join(' · ')||'Условия реализации уточняются'} · без удорожания</p>
       </div>
       <div class="phead-stats num">
@@ -993,7 +997,7 @@ function pdfHtml(f){
     <div class="pd-flat"><div class="pd-plan">${f.img&&PL[f.img]?`<img src="${PL[f.img]}" alt="">`:'<span>Планировка — на сайте застройщика</span>'}</div>
       <div class="pd-info"><div class="pd-ft">${RT(f.r)}, ${area(f.a)}</div>
         <div class="pd-kv"><div><small>Этаж</small><b>${f.fl} из ${f.ff}</b></div><div><small>Площадь</small><b>${area(f.a)}</b></div><div><small>За м²</small><b>${fmt(Math.round((f.ag||f.final)/f.a))}</b></div></div>
-        <div class="pd-prices">${pr('Базовая цена',`<s>${fmt(f.base)}</s>`)}${pr('Цена сайта со скидкой',fmt(f.site),'red')}${f.promo?pr(f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd),fmt(f.promo)):''}
+        <div class="pd-prices">${pr('Стоимость брони',fmt(BOOK(p.slug)))}${pr('Базовая цена',`<s>${fmt(f.base)}</s>`)}${pr('Цена сайта со скидкой',fmt(f.site),'red')}${f.promo?pr(f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd),fmt(f.promo)):''}
           ${f.ag?pr(`Цена со скидкой агента ${AGS}%`,fmt(f.ag),'ag'):pr('Итоговая цена',fmt(f.final),'fin')}</div>
         ${f.bk?'<div class="warn">Квартира забронирована на сайте застройщика.</div>':''}</div></div>
     ${CALC_FOR(f)?`<div class="pd-h">Расчёты</div>${calcHtml(f,true)}`:''}
@@ -1058,6 +1062,7 @@ function detail(f){
       </div>
       ${f.tags.length?`<div class="chips">${f.tags.map(t=>`<span class="tg g">${esc(t)}</span>`).join('')}</div>`:''}
       <div class="pbox num">
+        <div class="pline book"><span>Стоимость брони</span><b>${fmt(BOOK(p.slug))}</b></div>
         <div class="pline"><span>Базовая цена сайта</span><s class="black">${fmt(f.base)}</s></div>
         <div class="pline"><span>Цена сайта со скидкой</span><b class="red">${fmt(f.site)}</b></div>
         ${f.promo?`<div class="pline"><span>${f.pt==='anti_auction'?'Антиаукцион (цена снижается)':'Акция сайта до '+ddmm(f.pd)}</span><b class="black">−${fmt(f.site-f.promo)}</b></div>`:''}
