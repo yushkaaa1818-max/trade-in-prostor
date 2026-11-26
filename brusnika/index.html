@@ -532,9 +532,11 @@ function toBlobUrl(d){ if(!d||!d.startsWith('data:')) return d; if(BLOBS[d]) ret
   try{ const i=d.indexOf(','), mime=d.slice(5,d.indexOf(';')), bin=atob(d.slice(i+1)), u=new Uint8Array(bin.length); for(let k=0;k<bin.length;k++) u[k]=bin.charCodeAt(k);
     return BLOBS[d]=URL.createObjectURL(new Blob([u],{type:mime})); }catch(e){ return d; } }
 function loadPlans(slug){
-  if(PLREQ[slug]) return PLREQ[slug];
-  return PLREQ[slug] = fetch('plans-'+slug+'.json').then(r=>r.json()).then(d=>{for(const k in d) PL[k]=toBlobUrl(d[k]);PLDONE[slug]=true;const y=scrollY;render(true);scrollTo(0,y)}).catch(()=>{PLDONE[slug]=true});
+  if(PLDONE[slug]) return Promise.resolve();
+  FL.forEach(f=>{ if(f.slug===slug&&f.img) PL[f.img]='plans/'+f.img; }); PLDONE[slug]=true;
+  return Promise.resolve();
 }
+
 const app = document.getElementById('app');
 
 /* Скидка агента по датам (по московскому времени) */
@@ -626,12 +628,11 @@ function initMap(){
   const B=L.latLngBounds([55.43,37.03],[55.97,38.07]);
   LMAP=L.map(el,{minZoom:9,maxZoom:14,maxBounds:B,maxBoundsViscosity:1,scrollWheelZoom:false,zoomSnap:0.5,attributionControl:true,zoomControl:true});
   LMAP.attributionControl.setPrefix(false);
-  const Grid=L.GridLayer.extend({createTile(c){const img=document.createElement('img');img.alt='';const t=TL[c.z], k=c.x+'_'+c.y; if(t&&t[k]){ t[k]=toBlobUrl(t[k]); img.src=t[k]; } return img;}});
-  const layer=new Grid({maxNativeZoom:12,minNativeZoom:9,bounds:B,attribution:'© участники OpenStreetMap'}).addTo(LMAP);
+  const layer=L.tileLayer('tiles/{z}/{x}/{y}.webp',{minZoom:9,maxZoom:14,minNativeZoom:9,maxNativeZoom:12,bounds:B,attribution:'© участники OpenStreetMap'}).addTo(LMAP);
   const ld=document.getElementById('lload');
-  const load=z=>TL[z]?Promise.resolve():fetch('tiles-'+z+'.json').then(r=>{if(!r.ok) throw new Error(r.status); return r.json();}).then(d=>{TL[z]=d;layer.redraw();});
-  const first=[10,11,9].map(load);
-  Promise.allSettled(first).then(rs=>{ if(ld){ if(rs.every(r=>r.status==='rejected')) ld.textContent='Подложка карты не загрузилась — обновите страницу'; else ld.hidden=true; } return load(12); }).catch(()=>{});
+  let okT=0; layer.on('tileload',()=>{okT++; if(ld) ld.hidden=true;});
+  layer.on('load',()=>{ if(ld) ld.hidden=true; });
+  setTimeout(()=>{ if(!okT&&ld) ld.textContent='Подложка карты не загрузилась — обновите страницу'; },15000);
   MARK={};
   PROJ.forEach(p=>{const st=stats(flatsOf(p.slug));
     const icon=L.divIcon({className:'lmk',iconSize:[0,0],html:`<div class="lpin${agentOk(p.slug)||p.slug==='izdanie'?' hot':''}"><span class="lpb">${ICON}${mln(st.min)} млн</span><span class="lpl">${esc(p.name.replace(/Квартал |[«»]/g,''))}</span></div>`});
@@ -1138,7 +1139,7 @@ function render(keep){
   scrollTo(0, lastRoute.startsWith('kv-') && scrolls[h]!=null ? scrolls[h] : 0);
   lastRoute=h;
 }
-fetch('flats.json').then(r=>r.json()).then(d=>{const arr=Array.isArray(d)?d:d.flats; if(!Array.isArray(d)&&d.date) DATE=d.date; FL=arr.map(prep); render(); addEventListener('hashchange',render);})
+fetch('flats.json').then(r=>r.json()).then(d=>{const arr=Array.isArray(d)?d:d.flats; if(!Array.isArray(d)&&d.date) DATE=d.date; FL=arr.map(prep); PROJ.forEach(p=>loadPlans(p.slug)); render(); addEventListener('hashchange',render);})
  .catch(()=>{app.innerHTML='<div class="empty">Не удалось загрузить список квартир. Обновите страницу.</div>'});
 </script>
 
