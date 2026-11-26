@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Брусника для агентов</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap">
+<style>
+/* Layout: стиль «Простор» — светлый фон, белые скруглённые карточки, синий бренд, оранжевый акцент; слева меню разделов */
+:root{
+  --bg:#eef2f7; --surface:#f5f7fb; --card:#fff; --ink:#012e45; --muted:#536774; --line:#dce5ec;
+  --blue:#1879d4; --blue-soft:#ddebf8; --accent:#f89332; --accent-soft:#fee9d6; --lav:#dddef8; --mint:#dcf5e8;
+  --red:#d6153c; --agent-soft:#fdecef; --green:#14804a; --land:#e6edf4; --mkad:#a9bccb; --river:#bfd8ee;
+  --display:"Trebuchet MS","Lato",Arial,sans-serif; --text:"Lato","Trebuchet MS",Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--text);font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+a{color:inherit}
+
+.shell{max-width:1320px;margin:0 auto;padding-block:16px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:240px minmax(0,1fr);gap:18px;align-items:start}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;flex-direction:column;gap:12px}
+.brandcard{background:var(--card);border-radius:26px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{display:block;width:100%;max-width:204px;height:auto}
+.brand b{display:block;font-family:var(--display);font-size:19px;letter-spacing:.04em;color:var(--blue);line-height:1}
+.brand small{display:block;font-size:12px;color:var(--blue);margin-top:2px}
+.internal{background:var(--accent-soft);color:#8a4a0b;border-radius:16px;padding:7px 12px;font-size:13px;font-weight:700}
+.nav{background:var(--card);border-radius:26px;padding:10px;display:flex;flex-direction:column;gap:4px}
+.nav a{display:flex;justify-content:space-between;align-items:center;gap:8px;text-decoration:none;border-radius:18px;padding:10px 14px;font-weight:700;font-size:15px}
+.nav a:hover{background:var(--surface)}
+.nav a.on{background:var(--blue);color:#fff}
+.nav a.sub{font-weight:400;font-size:14px;padding:7px 14px}
+.nav a.sub i{font-style:normal;font-size:12px;background:var(--blue-soft);color:var(--ink);border-radius:10px;padding:1px 8px}
+.nav a.on i{background:#fff}
+.nav hr{border:0;border-top:1px solid var(--line);margin:6px 8px}
+.nav .cap{font-size:12px;color:var(--muted);padding:4px 14px 0}
+main{display:flex;flex-direction:column;gap:18px;min-width:0}
+
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px}
+.hero-main{background:var(--card);border-radius:26px;padding:26px 28px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{color:var(--blue);font-weight:700;font-size:15px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(26px,3.4vw,34px);margin:0;line-height:1.15;text-wrap:balance}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(22px,2.6vw,28px);margin:0;line-height:1.2;text-wrap:balance}
+.hero-main p{margin:0;color:var(--muted)}
+.terms-line{color:var(--blue);font-weight:700}
+.hero-note{margin-top:auto;background:var(--surface);border-radius:18px;padding:12px 16px;font-size:14px;color:var(--muted)}
+.hero-note b{color:var(--ink)}
+.tiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.tile{border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;min-height:104px;text-decoration:none}
+.tile b{font-family:var(--display);font-weight:700;font-size:30px;line-height:1}
+.tile span{font-size:14px}
+.t-blue{grid-column:span 3;background:var(--blue);color:#fff}
+.t-blue b{font-size:42px}
+.t-peach{grid-column:span 3;background:var(--accent-soft)}
+.t-sky{grid-column:span 2;background:var(--blue-soft)}
+.t-lav{grid-column:span 2;background:var(--lav)}
+.t-mint{grid-column:span 2;background:var(--mint)}
+.t-sky b,.t-lav b,.t-mint b{font-size:clamp(20px,2.2vw,28px);overflow-wrap:anywhere}
+a.tile:hover{filter:brightness(.97)}
+
+.sechead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:6px 4px 0}
+.sechead .fine{margin-left:auto}
+.fine{font-size:13px;color:var(--muted)}
+
+/* map */
+.mapwrap{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px}
+.mapbox{background:var(--card);border-radius:26px;padding:12px;position:relative}
+.mapvp{position:relative;height:clamp(380px,58vh,620px);overflow:hidden;border-radius:18px;background:#e8ece6;touch-action:none;cursor:grab;user-select:none}
+.mapvp:active{cursor:grabbing}
+.mapin{position:absolute;left:0;top:0;transform-origin:0 0;--s:1}
+.mapin img{display:block;max-width:none;width:100%;height:100%;pointer-events:none}
+.pin{position:absolute;transform:translate(-50%,-100%) scale(calc(1 / var(--s)));transform-origin:50% 100%;display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;z-index:1}
+.pin:hover,.pin:focus-visible{z-index:3}
+.pb{display:flex;align-items:center;gap:8px;background:#fff;border-radius:16px;padding:9px 14px 9px 11px;font-weight:700;font-size:17px;color:#111;box-shadow:0 3px 14px rgba(1,46,69,.22);white-space:nowrap;position:relative}
+.pb::after{content:"";position:absolute;left:50%;bottom:-6px;width:12px;height:12px;background:#fff;transform:translateX(-50%) rotate(45deg);border-radius:2px}
+.pb svg{width:20px;height:20px;color:var(--blue)}
+.pn{font-size:12px;font-weight:700;color:var(--ink);background:rgba(255,255,255,.85);border-radius:8px;padding:1px 7px;margin-top:6px;white-space:nowrap}
+.pin:hover .pb,.pin:focus-visible .pb{background:var(--blue);color:#fff}
+.pin:hover .pb::after,.pin:focus-visible .pb::after{background:var(--blue)}
+.pin:hover .pb svg,.pin:focus-visible .pb svg{color:#fff}
+.mapctl{position:absolute;right:24px;top:24px;display:flex;flex-direction:column;gap:6px;z-index:4}
+.mapctl button{width:40px;height:40px;border:0;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(1,46,69,.18);font-size:22px;font-weight:700;color:var(--ink)}
+.attrib{position:absolute;right:20px;bottom:16px;font-size:11px;background:rgba(255,255,255,.85);border-radius:6px;padding:1px 6px;color:var(--muted)}
+.card.ag{border:1px solid var(--red)}
+.nav a.sub.agn{background:var(--red);color:#fff;font-weight:700;margin:1px 0}
+.nav a.sub.agn i{background:#fff;color:var(--red)}
+.nav a.sub.agn:hover{background:#b8102f}
+.nav a.sub.agn.on{background:#9e0d29;box-shadow:inset 0 0 0 2px #fff,0 0 0 2px var(--red)}
+.lbox{display:flex;flex-direction:column;gap:12px}
+.lwrap{position:relative;border-radius:18px;overflow:hidden;isolation:isolate}
+.lmap{height:clamp(420px,62vh,640px);background:#eef1ec;font-family:var(--text)}
+.lwrap.on{position:fixed;inset:0;z-index:1000;border-radius:0;background:var(--bg)}
+.lwrap.on .lmap{height:100%}
+body.noscroll{overflow:hidden}
+.lfull{position:absolute;right:12px;top:12px;z-index:1001;border:0;background:#fff;border-radius:14px;padding:10px 14px;font-weight:700;font-size:14px;color:var(--ink);box-shadow:0 2px 10px rgba(1,46,69,.2)}
+.lwrap.on .lfull{top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px))}
+.lload{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1001;background:#fff;color:var(--ink);font-weight:700;font-size:14px;border-radius:12px;padding:8px 14px;box-shadow:0 2px 10px rgba(1,46,69,.2);pointer-events:none}
+.lhint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:1001;background:rgba(1,46,69,.78);color:#fff;font-size:13px;border-radius:10px;padding:6px 12px;pointer-events:none;white-space:nowrap}
+.ljk{display:flex;gap:8px;flex-wrap:wrap}
+.ljk .chip{background:var(--surface)}
+.ljk .chip i{background:var(--blue-soft)}
+.lmk{background:none;border:0}
+.lpin{position:absolute;left:0;top:0;transform:translate(-50%,calc(-100% - 6px));display:flex;flex-direction:column;align-items:center;cursor:pointer}
+.lpb{display:flex;align-items:center;gap:6px;background:#fff;border-radius:12px;padding:6px 10px 6px 8px;font-weight:700;font-size:14px;color:#111;box-shadow:0 2px 10px rgba(1,46,69,.25);white-space:nowrap;position:relative;font-family:var(--text)}
+.lpb::after{content:"";position:absolute;left:50%;bottom:-5px;width:10px;height:10px;background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:2px}
+.lpb svg{width:16px;height:16px;color:var(--blue)}
+.lpin.hot .lpb{box-shadow:0 0 0 1.5px var(--red),0 2px 10px rgba(1,46,69,.25)}
+.lpl{font-size:11px;font-weight:700;color:var(--ink);background:rgba(255,255,255,.9);border-radius:6px;padding:0 6px;margin-top:7px;white-space:nowrap;font-family:var(--text)}
+.lpin:hover .lpb{background:var(--blue);color:#fff}
+.lpin:hover .lpb svg{color:#fff}
+.leaflet-popup-content-wrapper{border-radius:20px;box-shadow:0 6px 24px rgba(1,46,69,.25)}
+.leaflet-popup-content{margin:16px 18px;font-family:var(--text);font-size:14px;line-height:1.4;color:var(--ink)}
+.leaflet-popup-close-button{font-size:20px!important;width:28px!important;height:28px!important;top:6px!important;right:6px!important}
+.leaflet-container a.leaflet-popup-close-button{color:var(--muted)}
+.lpop{display:flex;flex-direction:column;gap:10px}
+.lpn{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.15}
+.lpf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;background:var(--surface);border-radius:14px;padding:10px 12px}
+.lpf small{display:block;color:var(--muted);font-size:11.5px}
+.lpf b{font-size:14px}
+.lpop .btn{padding:9px 14px;font-size:14px}
+.leaflet-container a.btn-main{color:#fff}
+.leaflet-control-zoom a{width:36px!important;height:36px!important;line-height:36px!important;font-size:20px!important;color:var(--ink)!important}
+.leaflet-control-zoom{border:0!important;box-shadow:0 2px 10px rgba(1,46,69,.2)!important;border-radius:12px!important;overflow:hidden}
+.leaflet-bar a{background:#fff}
+.leaflet-container .leaflet-control-attribution{font-size:10px;background:rgba(255,255,255,.8)}
+.leaflet-tile{filter:none}
+.calcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:4px}
+.calc{background:var(--surface);border-radius:22px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.calc .who{font-size:13px;font-weight:700;color:var(--blue)}
+.calc h4{margin:0;font-family:var(--display);font-weight:400;font-size:20px}
+.calc .tkv{font-size:14.5px}
+.cbig{background:var(--card);border-radius:16px;padding:10px 14px}
+.cbig small{display:block;color:var(--muted);font-size:13px}
+.cbig b{font-family:var(--display);font-size:28px;line-height:1.1}
+.cnote{background:var(--accent-soft);border-radius:14px;padding:10px 12px;font-size:14px}
+#calcbox{display:flex;flex-direction:column;gap:14px}
+.disclaim{margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+.cbase{font-size:16px;background:var(--agent-soft);border:1px solid var(--red);color:var(--ink);border-radius:14px;padding:10px 14px}
+.cbase b{color:var(--red);font-size:18px}
+.calc-base .lbl{font-size:14px;color:var(--muted)}
+.calc-base .chip{background:var(--surface)}
+.calc-base .chip[aria-pressed="true"]{background:var(--blue);color:#fff}
+.calchead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pdfrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#pdfbtn svg{width:18px;height:18px}
+#pdfbtn[disabled]{opacity:.6;cursor:progress}
+.pdfmsg{font-size:14px;color:var(--muted)}
+.pdfhost{position:fixed;left:-10000px;top:0;width:794px;z-index:-1}
+.pdfdoc{width:794px;background:#fff;color:#012e45;padding:34px 38px;display:flex;flex-direction:column;gap:16px;font-family:var(--text)}
+.pd-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ddebf8;padding-bottom:12px}
+.pd-logo{width:190px;height:auto}
+.pd-date{text-align:right;font-size:13px;color:#536774;font-weight:700}
+.pd-proj{display:flex;gap:16px;align-items:center}
+.pd-proj img{width:170px;height:110px;object-fit:cover;border-radius:14px;flex:none}
+.pd-eye{color:#1879d4;font-weight:700;font-size:13px}
+.pd-pn{font-family:var(--display);font-size:26px;line-height:1.15}
+.pd-sub{font-size:13px;color:#536774;margin-top:4px}
+.pd-flat{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.pd-plan{border:1px solid #dce5ec;border-radius:16px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff}
+.pd-plan img{width:100%;height:100%;object-fit:contain;padding:8px}
+.pd-plan span{font-size:13px;color:#536774}
+.pd-info{display:flex;flex-direction:column;gap:12px}
+.pd-ft{font-family:var(--display);font-size:24px}
+.pd-kv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:#f5f7fb;border-radius:12px;padding:10px 12px}
+.pd-kv small{display:block;color:#536774;font-size:11.5px}
+.pd-kv b{font-size:14px}
+.pd-prices{display:flex;flex-direction:column;gap:6px}
+.pr{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:#536774}
+.pr b{color:#012e45;white-space:nowrap}
+.pr.red b{color:#d6153c}
+.pr.ag,.pr.fin{border:1px solid #d6153c;background:#fdecef;border-radius:12px;padding:8px 10px;margin-top:4px;color:#d6153c;font-weight:700}
+.pr.fin{border-color:#1879d4;background:#ddebf8;color:#012e45}
+.pr.ag b,.pr.fin b{font-size:19px;color:inherit}
+.pd-h{font-family:var(--display);font-size:20px;margin-top:4px}
+.pdfdoc .calcs{grid-template-columns:repeat(3,1fr);gap:10px}
+.pdfdoc .calc{padding:12px 14px;gap:8px;border-radius:14px}
+.pdfdoc .calc h4{font-size:16px}
+.pdfdoc .calc .tkv{font-size:12px;gap:3px 10px}
+.pdfdoc .cbig b{font-size:20px}
+.pdfdoc .cnote{font-size:12px}
+.pdfdoc .cbase{font-size:14px;padding:8px 12px}
+.pdfdoc .split{height:24px;font-size:11px}
+.calc.fam{border:2px solid var(--blue-soft)}
+.fctl{display:grid;grid-template-columns:1fr;gap:6px;align-items:center;background:var(--card);border-radius:14px;padding:10px 12px;font-size:13.5px}
+.fctl label,.fctl .lbl2{color:var(--muted)}
+.fctl .sel{background:var(--surface);padding:7px 10px;font-size:14px;min-width:0;width:100%}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:0;background:var(--surface);border-radius:12px;padding:6px 12px;font-weight:700;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.pvrow{display:flex;align-items:center;gap:8px}
+.pvrow input{flex:1;min-width:0;accent-color:var(--blue)}
+.akcia.bk{background:#6b7379}
+.card.bkd .plan img{opacity:.5}
+.sched tr.cur td{background:var(--agent-soft)}
+.nowtag{background:var(--red);color:#fff;border-radius:8px;padding:1px 7px;font-size:12px;margin-left:6px}
+.akcia{position:absolute;right:10px;top:10px;background:var(--red);color:#fff;border-radius:12px;padding:7px 14px;font-weight:900;font-size:16px;line-height:1;letter-spacing:.02em}
+.card.ag:hover{border-color:var(--red)}
+.agent{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--red);background:var(--agent-soft);border-radius:14px;padding:8px 12px;font-size:13.5px;color:var(--red);font-weight:700}
+.agent b{font-size:18px;white-space:nowrap}
+.agent.big{padding:12px 16px;font-size:15px}
+.agent.big b{font-size:26px;font-family:var(--display)}
+.agent small{display:block;font-weight:400;color:var(--muted)}
+.tg.ag{background:var(--agent-soft);color:var(--red);border:1px solid var(--red)}
+.pt{cursor:pointer}
+.pt .halo{fill:var(--accent);opacity:.2}
+.pt .dot{fill:var(--accent);stroke:#fff;stroke-width:3}
+.pt.off .dot{fill:var(--mkad)}
+.pt.off .halo{opacity:0}
+.pt.on .dot{fill:var(--blue)}
+.pt.on .halo{fill:var(--blue);opacity:.25}
+.pt text{font-family:var(--text);font-weight:700;font-size:15px;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+.pt.off text{fill:var(--muted);font-weight:400;font-size:13px}
+.maplegend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:8px 6px 2px}
+.maplegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.mapside{background:var(--card);border-radius:26px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+
+/* project cards */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.pcard{background:var(--card);border-radius:26px;padding:20px 22px;display:flex;flex-direction:column;gap:14px;border:1px solid transparent;transition:border-color .15s,transform .15s;min-width:0}
+.pcard:hover{border-color:var(--blue-soft);transform:translateY(-2px)}
+.pcard.hl{border-color:var(--blue)}
+.ptop{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.ptop h3{margin:0;font-family:var(--display);font-weight:400;font-size:23px;line-height:1.15}
+.ptop .cnt{background:var(--blue);color:#fff;border-radius:14px;padding:6px 10px;text-align:center;line-height:1;flex:none}
+.ptop .cnt b{display:block;font-size:20px;font-family:var(--display)}
+.ptop .cnt small{font-size:11px}
+.intro{color:var(--muted);font-size:14px;margin:0}
+.metro{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px}
+.metro span{display:inline-flex;align-items:center;gap:5px}
+.metro i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.pfacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;background:var(--surface);border-radius:18px;padding:12px 14px}
+.pfacts small{display:block;color:var(--muted);font-size:12.5px}
+.pfacts b{font-size:16px}
+.rooms{display:flex;gap:6px;flex-wrap:wrap}
+.rooms span{background:var(--blue-soft);border-radius:10px;padding:3px 9px;font-size:13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.tg{border-radius:10px;padding:4px 10px;font-size:13px;font-weight:700;background:var(--accent-soft);color:#8a4a0b}
+.tg.b{background:var(--mint);color:var(--green)}
+.tg.g{background:var(--lav);color:var(--ink);font-weight:400}
+.pbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.btn{border:0;border-radius:22px;padding:11px 18px;font-weight:700;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-main{background:var(--accent);color:#fff}
+.btn-main:hover{background:#e7801f}
+.btn-soft{background:var(--blue-soft);color:var(--blue)}
+.btn-soft:hover{background:var(--blue);color:#fff}
+
+/* filters + flat cards */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chip{border:0;background:var(--card);border-radius:22px;padding:9px 14px;display:inline-flex;gap:8px;align-items:center;font-size:15px}
+.chip i{font-style:normal;background:var(--accent-soft);border-radius:12px;padding:1px 8px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--accent);color:#fff}
+.chip[aria-pressed="true"] i{background:#fff;color:var(--ink)}
+.sel{border:0;background:var(--card);border-radius:22px;padding:9px 14px;font-size:15px}
+.sel.blue{background:var(--blue-soft);margin-left:auto}
+.found{font-size:15px;color:var(--muted)}
+.found b{color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{background:var(--card);border-radius:26px;padding:12px;display:flex;flex-direction:column;gap:12px;border:1px solid transparent;transition:border-color .15s,transform .15s;min-width:0}
+.card:hover{border-color:var(--blue-soft);transform:translateY(-2px)}
+.card-main{display:flex;flex-direction:column;gap:12px;text-decoration:none;flex:1}
+.site-link{margin:0 8px 6px;display:flex;justify-content:center;gap:6px;background:var(--blue-soft);color:var(--blue);font-weight:700;font-size:15px;text-decoration:none;border-radius:18px;padding:11px 14px}
+.site-link:hover{background:var(--blue);color:#fff}
+.plan{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;aspect-ratio:4/3;max-width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.plan img{width:100%;height:100%;object-fit:contain;padding:28px 8px 8px}
+.plan .noplan{font-size:13px;color:var(--muted);text-align:center;padding:16px}
+.badges{position:absolute;left:10px;top:10px;display:flex;gap:6px;flex-wrap:wrap;max-width:90%}
+.bd{border-radius:10px;padding:3px 9px;font-size:13px;font-weight:700}
+.b-dark{background:var(--ink);color:#fff}
+.b-soft{background:var(--blue-soft);color:var(--ink);font-weight:400}
+.disc{position:absolute;right:10px;top:10px;background:var(--accent);color:#fff;border-radius:12px;padding:6px 10px;font-weight:900;font-size:16px;line-height:1;text-align:right}
+.disc small{display:block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.9;margin-bottom:2px}
+.disc.aa{background:var(--red)}
+.body{padding:2px 8px 8px;display:flex;flex-direction:column;gap:12px}
+.ttl{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ttl h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px}
+.ttl span{color:var(--blue);font-size:14px;white-space:nowrap}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.facts small{display:block;color:var(--muted);font-size:13px}
+.facts b{font-size:15px}
+.prices{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.pline{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted)}
+.pline b{font-weight:700;white-space:nowrap}
+.black{color:var(--ink)}
+.red{color:var(--red)}
+s.black{text-decoration-thickness:1px}
+.final{display:flex;flex-direction:column;gap:2px;margin-top:6px;background:var(--surface);border-radius:16px;padding:10px 12px}
+.final small{font-size:13px;color:var(--muted)}
+.final b{font-family:var(--display);font-size:26px;font-weight:700;line-height:1.1}
+.final .save{font-size:13px;color:var(--green);font-weight:700}
+.mini{font-size:13px;color:var(--muted)}
+.mini b{color:var(--ink)}
+.empty{background:var(--card);border-radius:26px;padding:40px;text-align:center;color:var(--muted)}
+.more{align-self:center}
+
+/* detail */
+.back-row{display:flex;gap:10px;flex-wrap:wrap}
+.pill{border:0;background:var(--card);border-radius:22px;padding:10px 16px;color:var(--blue);font-weight:700;text-decoration:none;font-size:15px}
+.detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.panel{background:var(--card);border-radius:26px;padding:22px 24px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel.full{grid-column:1/-1}
+.panel .tcard{background:var(--surface)}
+.panel h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px}
+.dplan{position:relative;aspect-ratio:4/3;max-width:100%;display:flex;align-items:center;justify-content:center}
+.dplan img{width:100%;height:100%;object-fit:contain;padding-top:30px}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.kv small{display:block;color:var(--muted);font-size:13px}
+.kv b{font-size:16px}
+.pbox{border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:6px}
+.pbox .pline{font-size:15px}
+.bigfinal small{color:var(--muted);font-size:14px}
+.bigfinal b{display:block;font-family:var(--display);font-size:clamp(30px,4.4vw,42px);font-weight:700;line-height:1.05}
+.bigfinal .save{color:var(--green);font-weight:700;font-size:14px}
+.pm{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.pm div{background:var(--surface);border-radius:16px;padding:12px 14px}
+.pm small{display:block;color:var(--muted);font-size:13px}
+.pm b{font-family:var(--display);font-size:20px}
+.soon{border:2px dashed var(--line);border-radius:18px;padding:16px;color:var(--muted);font-size:14px}
+.copytext{width:100%;min-height:170px;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:14px;resize:vertical}
+.copy-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.copied{font-size:14px;color:var(--green);font-weight:700}
+
+/* terms */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.tcard{background:var(--card);border-radius:22px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.tcard .who{font-size:13px;font-weight:700;color:var(--blue)}
+.tcard h4{margin:2px 0 0;font-family:var(--display);font-weight:400;font-size:19px;line-height:1.2}
+.rate{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px dashed var(--line);font-size:15px}
+.rate:first-child{border-top:0}
+.rate .v{font-weight:900;color:var(--accent);white-space:nowrap;font-size:17px}
+.tkv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:15px;margin:0}
+.tkv dt{color:var(--muted)}
+.tkv dd{margin:0;font-weight:700}
+.split{display:flex;height:34px;border-radius:10px;overflow:hidden;font-size:13px;font-weight:700}
+.split span{display:flex;align-items:center;justify-content:center;color:#fff;background:var(--blue)}
+.split span:nth-child(2){background:var(--accent)}
+.split span:nth-child(3){background:var(--ink)}
+.split-cap{display:flex;font-size:12px;color:var(--muted);margin-top:4px}
+.split-cap span{text-align:center}
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 10px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:13px;color:var(--muted);font-weight:400}
+td:first-child,th:first-child{text-align:left}
+td.r{font-weight:900;color:var(--accent)}
+.banner{background:var(--blue);color:#fff;border-radius:22px;padding:16px 20px;display:flex;gap:8px 20px;flex-wrap:wrap;align-items:center;font-size:15px}
+.banner b{font-family:var(--display);font-size:19px;font-weight:700}
+.note{background:var(--accent-soft);border-radius:18px;padding:14px 18px;font-size:15px}
+.block{gap:18px;scroll-margin-top:16px}
+.blkhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.blkhead h2{font-size:clamp(22px,2.6vw,28px)}
+.blknum{width:44px;height:44px;border-radius:14px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:20px;flex:none}
+.blkhi{margin-left:auto;background:var(--accent);color:#fff;border-radius:14px;padding:8px 14px;font-weight:900;font-size:18px;white-space:nowrap}
+.block .tcard{background:var(--surface)}
+.grp{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+.grp h3{font-size:18px;color:var(--blue);font-family:var(--text);font-weight:700}
+.warn{background:#fde4e9;color:var(--red);border-radius:12px;padding:8px 12px;font-size:13.5px;font-weight:700}
+.bld-row .lbl{font-size:14px;color:var(--muted)}
+.bld-row .chip[aria-pressed="true"]{background:var(--blue)}
+.chip.red{background:var(--red);color:#fff;font-weight:700}
+.chip.red i{background:#fff;color:var(--red)}
+.bld-row .chip.red[aria-pressed="true"]{background:var(--red);box-shadow:0 0 0 3px var(--agent-soft),0 0 0 4px var(--red)}
+.tile[data-blk]{cursor:pointer;font:inherit;color:inherit}
+.tile[data-blk]:hover{filter:brightness(.97)}
+.foot{font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:8px 0 0}
+
+@media (max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero,.mapwrap{grid-template-columns:1fr}}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static}
+  .brandcard{flex-direction:row;align-items:center;flex-wrap:wrap;justify-content:space-between}
+  .nav{flex-direction:row;flex-wrap:wrap}
+  .nav hr,.nav .cap,.nav a.sub{display:none}
+  .detail{grid-template-columns:1fr}
+}
+@media (max-width:620px){.ljk{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.ljk .chip{flex:none}.lpb{font-size:12.5px;padding:5px 8px 5px 7px}.lpl{font-size:10px}.lhint{font-size:12px}.lmap{height:440px}.pb{font-size:13px;padding:6px 9px 6px 8px;gap:5px}.pb svg{width:15px;height:15px}.pn{font-size:10.5px}.mapctl{right:20px;top:20px}.grid{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.t-blue,.t-peach,.t-sky,.t-lav,.t-mint{grid-column:span 1}.t-mint{grid-column:span 2}.kv{grid-template-columns:repeat(2,minmax(0,1fr))}.sel.blue{margin-left:0}.pgrid,.cards{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.card,.pcard{transition:none}.card:hover,.pcard:hover{transform:none}}
+
+.phead{background:var(--card);border-radius:26px;overflow:hidden;display:flex;flex-direction:column}
+.phead-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;padding:26px 28px 22px;align-items:start}
+.phead-txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.phead-txt p{margin:0;color:var(--muted);font-size:17px}
+.h-big{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,58px);line-height:1.05;margin:4px 0 6px;text-wrap:balance}
+.phead-stats{display:grid;grid-template-columns:repeat(2,minmax(150px,1fr));gap:12px}
+.phead-stats .tile{min-height:110px;grid-column:auto}
+.phead-strip{position:relative;height:200px;overflow:hidden}
+.phead-strip img{width:100%;height:100%;object-fit:cover;display:block}
+.phead-strip.open{height:120px}
+.phbtn{position:absolute;left:20px;bottom:18px;border:0;background:#fff;border-radius:22px;padding:12px 20px;font-weight:700;font-size:16px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 3px 14px rgba(1,46,69,.2)}
+.phbtn svg{width:20px;height:20px}
+.phbtn:hover{background:var(--blue);color:#fff}
+.about{background:var(--card);border-radius:26px;padding:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:22px;align-items:stretch}
+.about-txt{padding:18px 16px;display:flex;flex-direction:column;gap:10px}
+.about-txt p{margin:0;line-height:1.6;font-size:16px}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{background:#1166b5}
+.mosaic{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:10px;min-height:340px}
+.mz{position:relative;border:0;padding:0;border-radius:18px;overflow:hidden;background:var(--surface)}
+.mz.big{grid-row:span 2}
+.mz img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.mz:hover img{transform:scale(1.03)}
+.mz span{position:absolute;left:12px;bottom:12px;background:rgba(1,46,69,.85);color:#fff;border-radius:12px;padding:5px 11px;font-weight:700;font-size:14px}
+.gpbox{background:var(--card);border-radius:26px;padding:12px;overflow:hidden}
+.gpbox svg{display:block;width:100%;height:auto;border-radius:18px}
+.gpoly{fill:rgba(24,121,212,.28);stroke:#fff;stroke-width:4;transition:fill .15s}
+.gpb{cursor:pointer;outline:none}
+.gpb:hover .gpoly,.gpb:focus-visible .gpoly{fill:rgba(24,121,212,.55)}
+.gpb.red .gpoly{fill:rgba(214,21,60,.3)}
+.gpb.red:hover .gpoly,.gpb.red:focus-visible .gpoly{fill:rgba(214,21,60,.55)}
+.gplab{fill:#fff;filter:drop-shadow(0 3px 8px rgba(1,46,69,.3))}
+.gptx{font-family:var(--text);font-weight:700;font-size:30px;fill:var(--ink)}
+.gpb.red .gptx{fill:var(--red)}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.bcard{border:1px solid transparent;background:var(--card);border-radius:26px;padding:12px;display:flex;flex-direction:column;gap:12px;text-align:left;font:inherit;color:inherit;transition:border-color .15s,transform .15s}
+.bcard:hover{border-color:var(--blue);transform:translateY(-2px)}
+.bcard.on{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+.bcard.red{border-color:var(--red)}
+.bimg{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:18px;overflow:hidden;background:var(--surface)}
+.bimg svg{width:100%;height:100%;display:block}
+.gpoly.on{fill:rgba(24,121,212,.35);stroke:#fff;stroke-width:5}
+.bcard.red .gpoly.on{fill:rgba(214,21,60,.35)}
+.bcnt{position:absolute;left:12px;bottom:12px;background:#fff;border-radius:14px;padding:5px 12px;font-weight:700;font-size:14px}
+.bbody{display:flex;flex-direction:column;gap:6px;padding:2px 8px 6px}
+.brow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brow b{font-family:var(--display);font-weight:400;font-size:24px}
+.brow span{color:var(--muted);font-size:14px}
+.brow .bpr{font-family:var(--text);font-weight:900;font-size:19px}
+.gal{position:fixed;inset:0;z-index:2000;background:rgba(1,20,30,.92);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.gal img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px}
+.gal button{position:absolute;border:0;background:#fff;color:var(--ink);border-radius:50%;width:46px;height:46px;font-size:24px;font-weight:700}
+.gx{top:calc(16px + env(safe-area-inset-top,0px));right:calc(16px + env(safe-area-inset-right,0px))}
+.gl{left:calc(16px + env(safe-area-inset-left,0px));top:50%;transform:translateY(-50%)}
+.gr{right:calc(16px + env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%)}
+.gc{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-size:14px}
+#flist{scroll-margin-top:16px}
+@media (max-width:900px){.phead-top{grid-template-columns:1fr}.about{grid-template-columns:1fr}.mosaic{min-height:260px}}
+@media (max-width:620px){.phead-top{padding:20px}.phead-stats{grid-template-columns:1fr 1fr}.phead-strip{height:150px}.phbtn{left:14px;bottom:12px;padding:10px 16px;font-size:15px}.mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}.mz.big{grid-column:span 2;grid-row:auto;aspect-ratio:16/10}.mz{aspect-ratio:4/3}.gptx{font-size:44px}}
+/* leaflet 1.9.4 core css */
+ .leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer { position: absolute; left: 0; top: 0; } .leaflet-container { overflow: hidden; } .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow { -webkit-user-select: none; -moz-user-select: none; user-select: none; -webkit-user-drag: none; } .leaflet-tile::selection { background: transparent; } .leaflet-safari .leaflet-tile { image-rendering: -webkit-optimize-contrast; } .leaflet-safari .leaflet-tile-container { width: 1600px; height: 1600px; -webkit-transform-origin: 0 0; } .leaflet-marker-icon, .leaflet-marker-shadow { display: block; } .leaflet-container .leaflet-overlay-pane svg { max-width: none !important; max-height: none !important; } .leaflet-container .leaflet-marker-pane img, .leaflet-container .leaflet-shadow-pane img, .leaflet-container .leaflet-tile-pane img, .leaflet-container img.leaflet-image-layer, .leaflet-container .leaflet-tile { max-width: none !important; max-height: none !important; width: auto; padding: 0; } .leaflet-container img.leaflet-tile { mix-blend-mode: plus-lighter; } .leaflet-container.leaflet-touch-zoom { -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; } .leaflet-container.leaflet-touch-drag { -ms-touch-action: pinch-zoom; touch-action: none; touch-action: pinch-zoom; } .leaflet-container.leaflet-touch-drag.leaflet-touch-zoom { -ms-touch-action: none; touch-action: none; } .leaflet-container { -webkit-tap-highlight-color: transparent; } .leaflet-container a { -webkit-tap-highlight-color: rgba(51, 181, 229, 0.4); } .leaflet-tile { filter: inherit; visibility: hidden; } .leaflet-tile-loaded { visibility: inherit; } .leaflet-zoom-box { width: 0; height: 0; -moz-box-sizing: border-box; box-sizing: border-box; z-index: 800; } .leaflet-overlay-pane svg { -moz-user-select: none; } .leaflet-pane { z-index: 400; } .leaflet-tile-pane { z-index: 200; } .leaflet-overlay-pane { z-index: 400; } .leaflet-shadow-pane { z-index: 500; } .leaflet-marker-pane { z-index: 600; } .leaflet-tooltip-pane { z-index: 650; } .leaflet-popup-pane { z-index: 700; } .leaflet-map-pane canvas { z-index: 100; } .leaflet-map-pane svg { z-index: 200; } .leaflet-vml-shape { width: 1px; height: 1px; } .lvml { behavior: none; display: inline-block; position: absolute; } .leaflet-control { position: relative; z-index: 800; pointer-events: visiblePainted; pointer-events: auto; } .leaflet-top, .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; } .leaflet-top { top: 0; } .leaflet-right { right: 0; } .leaflet-bottom { bottom: 0; } .leaflet-left { left: 0; } .leaflet-control { float: left; clear: both; } .leaflet-right .leaflet-control { float: right; } .leaflet-top .leaflet-control { margin-top: 10px; } .leaflet-bottom .leaflet-control { margin-bottom: 10px; } .leaflet-left .leaflet-control { margin-left: 10px; } .leaflet-right .leaflet-control { margin-right: 10px; } .leaflet-fade-anim .leaflet-popup { opacity: 0; -webkit-transition: opacity 0.2s linear; -moz-transition: opacity 0.2s linear; transition: opacity 0.2s linear; } .leaflet-fade-anim .leaflet-map-pane .leaflet-popup { opacity: 1; } .leaflet-zoom-animated { -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; } svg.leaflet-zoom-animated { will-change: transform; } .leaflet-zoom-anim .leaflet-zoom-animated { -webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1); -moz-transition: -moz-transform 0.25s cubic-bezier(0,0,0.25,1); transition: transform 0.25s cubic-bezier(0,0,0.25,1); } .leaflet-zoom-anim .leaflet-tile, .leaflet-pan-anim .leaflet-tile { -webkit-transition: none; -moz-transition: none; transition: none; } .leaflet-zoom-anim .leaflet-zoom-hide { visibility: hidden; } .leaflet-interactive { cursor: pointer; } .leaflet-grab { cursor: -webkit-grab; cursor: -moz-grab; cursor: grab; } .leaflet-crosshair, .leaflet-crosshair .leaflet-interactive { cursor: crosshair; } .leaflet-popup-pane, .leaflet-control { cursor: auto; } .leaflet-dragging .leaflet-grab, .leaflet-dragging .leaflet-grab .leaflet-interactive, .leaflet-dragging .leaflet-marker-draggable { cursor: move; cursor: -webkit-grabbing; cursor: -moz-grabbing; cursor: grabbing; } .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-image-layer, .leaflet-pane > svg path, .leaflet-tile-container { pointer-events: none; } .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path { pointer-events: visiblePainted; pointer-events: auto; } .leaflet-container { background: #ddd; outline-offset: 1px; } .leaflet-container a { color: #0078A8; } .leaflet-zoom-box { border: 2px dotted #38f; background: rgba(255,255,255,0.5); } .leaflet-container { font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; font-size: 12px; font-size: 0.75rem; line-height: 1.5; } .leaflet-bar { box-shadow: 0 1px 5px rgba(0,0,0,0.65); border-radius: 4px; } .leaflet-bar a { background-color: #fff; border-bottom: 1px solid #ccc; width: 26px; height: 26px; line-height: 26px; display: block; text-align: center; text-decoration: none; color: black; } .leaflet-bar a, .leaflet-control-layers-toggle { background-position: 50% 50%; background-repeat: no-repeat; display: block; } .leaflet-bar a:hover, .leaflet-bar a:focus { background-color: #f4f4f4; } .leaflet-bar a:first-child { border-top-left-radius: 4px; border-top-right-radius: 4px; } .leaflet-bar a:last-child { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border-bottom: none; } .leaflet-bar a.leaflet-disabled { cursor: default; background-color: #f4f4f4; color: #bbb; } .leaflet-touch .leaflet-bar a { width: 30px; height: 30px; line-height: 30px; } .leaflet-touch .leaflet-bar a:first-child { border-top-left-radius: 2px; border-top-right-radius: 2px; } .leaflet-touch .leaflet-bar a:last-child { border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; } .leaflet-control-zoom-in, .leaflet-control-zoom-out { font: bold 18px 'Lucida Console', Monaco, monospace; text-indent: 1px; } .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out { font-size: 22px; } .leaflet-control-layers { box-shadow: 0 1px 5px rgba(0,0,0,0.4); background: #fff; border-radius: 5px; } .leaflet-control-layers-toggle { background-image: none; width: 36px; height: 36px; } .leaflet-retina .leaflet-control-layers-toggle { background-image: none; background-size: 26px 26px; } .leaflet-touch .leaflet-control-layers-toggle { width: 44px; height: 44px; } .leaflet-control-layers .leaflet-control-layers-list, .leaflet-control-layers-expanded .leaflet-control-layers-toggle { display: none; } .leaflet-control-layers-expanded .leaflet-control-layers-list { display: block; position: relative; } .leaflet-control-layers-expanded { padding: 6px 10px 6px 6px; color: #333; background: #fff; } .leaflet-control-layers-scrollbar { overflow-y: scroll; overflow-x: hidden; padding-right: 5px; } .leaflet-control-layers-selector { margin-top: 2px; position: relative; top: 1px; } .leaflet-control-layers label { display: block; font-size: 13px; font-size: 1.08333em; } .leaflet-control-layers-separator { height: 0; border-top: 1px solid #ddd; margin: 5px -10px 5px -6px; } .leaflet-default-icon-path { background-image: none; } .leaflet-container .leaflet-control-attribution { background: #fff; background: rgba(255, 255, 255, 0.8); margin: 0; } .leaflet-control-attribution, .leaflet-control-scale-line { padding: 0 5px; color: #333; line-height: 1.4; } .leaflet-control-attribution a { text-decoration: none; } .leaflet-control-attribution a:hover, .leaflet-control-attribution a:focus { text-decoration: underline; } .leaflet-attribution-flag { display: inline !important; vertical-align: baseline !important; width: 1em; height: 0.6669em; } .leaflet-left .leaflet-control-scale { margin-left: 5px; } .leaflet-bottom .leaflet-control-scale { margin-bottom: 5px; } .leaflet-control-scale-line { border: 2px solid #777; border-top: none; line-height: 1.1; padding: 2px 5px 1px; white-space: nowrap; -moz-box-sizing: border-box; box-sizing: border-box; background: rgba(255, 255, 255, 0.8); text-shadow: 1px 1px #fff; } .leaflet-control-scale-line:not(:first-child) { border-top: 2px solid #777; border-bottom: none; margin-top: -2px; } .leaflet-control-scale-line:not(:first-child):not(:last-child) { border-bottom: 2px solid #777; } .leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { box-shadow: none; } .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { border: 2px solid rgba(0,0,0,0.2); background-clip: padding-box; } .leaflet-popup { position: absolute; text-align: center; margin-bottom: 20px; } .leaflet-popup-content-wrapper { padding: 1px; text-align: left; border-radius: 12px; } .leaflet-popup-content { margin: 13px 24px 13px 20px; line-height: 1.3; font-size: 13px; font-size: 1.08333em; min-height: 1px; } .leaflet-popup-content p { margin: 17px 0; margin: 1.3em 0; } .leaflet-popup-tip-container { width: 40px; height: 20px; position: absolute; left: 50%; margin-top: -1px; margin-left: -20px; overflow: hidden; pointer-events: none; } .leaflet-popup-tip { width: 17px; height: 17px; padding: 1px; margin: -10px auto 0; pointer-events: auto; -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); } .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: white; color: #333; box-shadow: 0 3px 14px rgba(0,0,0,0.4); } .leaflet-container a.leaflet-popup-close-button { position: absolute; top: 0; right: 0; border: none; text-align: center; width: 24px; height: 24px; font: 16px/24px Tahoma, Verdana, sans-serif; color: #757575; text-decoration: none; background: transparent; } .leaflet-container a.leaflet-popup-close-button:hover, .leaflet-container a.leaflet-popup-close-button:focus { color: #585858; } .leaflet-popup-scrolled { overflow: auto; } .leaflet-oldie .leaflet-popup-content-wrapper { -ms-zoom: 1; } .leaflet-oldie .leaflet-popup-tip { width: 24px; margin: 0 auto; -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)"; filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678); } .leaflet-oldie .leaflet-control-zoom, .leaflet-oldie .leaflet-control-layers, .leaflet-oldie .leaflet-popup-content-wrapper, .leaflet-oldie .leaflet-popup-tip { border: 1px solid #999; } .leaflet-div-icon { background: #fff; border: 1px solid #666; } .leaflet-tooltip { position: absolute; padding: 6px; background-color: #fff; border: 1px solid #fff; border-radius: 3px; color: #222; white-space: nowrap; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.4); } .leaflet-tooltip.leaflet-interactive { cursor: pointer; pointer-events: auto; } .leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { position: absolute; pointer-events: none; border: 6px solid transparent; background: transparent; content: ""; } .leaflet-tooltip-bottom { margin-top: 6px; } .leaflet-tooltip-top { margin-top: -6px; } .leaflet-tooltip-bottom:before, .leaflet-tooltip-top:before { left: 50%; margin-left: -6px; } .leaflet-tooltip-top:before { bottom: 0; margin-bottom: -12px; border-top-color: #fff; } .leaflet-tooltip-bottom:before { top: 0; margin-top: -12px; margin-left: -6px; border-bottom-color: #fff; } .leaflet-tooltip-left { margin-left: -6px; } .leaflet-tooltip-right { margin-left: 6px; } .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { top: 50%; margin-top: -6px; } .leaflet-tooltip-left:before { right: 0; margin-right: -12px; border-left-color: #fff; } .leaflet-tooltip-right:before { left: 0; margin-left: -12px; border-right-color: #fff; } @media print { .leaflet-control { -webkit-print-color-adjust: exact; print-color-adjust: exact; } } 
+</style>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brandcard">
+      <a class="brand" href="#home" aria-label="На главную"><img src="prostor-logo.webp" width="600" height="158" alt="Простор недвижимость"></a>
+      <span class="internal">Для агентов · Брусника</span>
+    </div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+  <main id="app"><div class="empty">Загружаю квартиры…</div></main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+/* ---------- Проекты (координаты и описание — с сайта Брусники) ---------- */
+const PROJ = [
+ {id:83, slug:"izdanie", name:"Квартал «Издание»", intro:"С ландшафтным парком 2,4 га", place:"Москва, Перовское шоссе", metro:[["Нижегородская","#57C9FA"],["Чухлинка","#40B280"]], lat:55.736973, lon:37.748086, lab:"r"},
+ {id:82, slug:"mons", name:"Квартал «МОНС»", intro:"В окружении 3 парков", place:"Москва, Бутырский р-н, Огородный пр.", metro:[["Фонвизинская","#B3CF7A"],["Тимирязевская","#9A9A9A"]], lat:55.82032, lon:37.594323, lab:"l"},
+ {id:92, slug:"gertzena", name:"Квартал Герцена", intro:"Рядом с фруктовым садом", place:"Москва, Бирюлёво Восточное", metro:[["Лебедянская","#AC1753"],["Царицыно","#2DBE2C"]], lat:55.585348, lon:37.703066, lab:"l"},
+ {id:11, slug:"perviy", name:"Первый квартал", intro:"Центр городской жизни", place:"МО, г. Видное", metro:[["Расторгуево","#EC3526"],["Видное","#292522"]], lat:55.5337, lon:37.7157, lab:"r"},
+ {id:79, slug:"metronom", name:"Квартал «Метроном»", intro:"В шаге от Лосиного острова", place:"Москва, Восточный округ", metro:[["Бульвар Рокоссовского","#EC3526"],["Локомотив","#EE6E9D"]], lat:55.814556, lon:37.754331, lab:"r"},
+ {id:109, slug:"rublevskie-dvory", name:"Рублёвские дворы", intro:"Лес прилагается", place:"МО, Одинцовский г.о., Лайково", metro:[["Одинцово","#EFA81A"]], lat:55.696679, lon:37.217257, lab:"r"},
+ {id:99, slug:"belata", name:"Квартал «Белата»", intro:"Тихий центр Люберец", place:"МО, Люберцы", metro:[["Котельники","#800080"],["Люберцы","#E15D29"]], lat:55.675987, lon:37.880872, lab:"l"},
+ {id:87, slug:"dom-a", name:"Дом «А»", intro:"В центре Москвы", place:"Москва, у м. Павелецкая", metro:[["Павелецкая","#429466"],["Серпуховская","#9A9A9A"]], lat:55.720087, lon:37.637775, lab:"l"}
+];
+const PMETA={"izdanie":{"ph":["img/izdanie-hero.webp","img/izdanie-s1.webp","img/izdanie-s2.webp","img/izdanie-s3.webp"],"gp":"img/izdanie-gp.webp","w":2880,"h":1360,"desc":"Современный жилой квартал на Перовском шоссе. Эстетичный и функциональный, со стилистически едиными архитектурными и ландшафтными решениями.","b":[{"n":"Дом 1","pts":["920.3,918.6 1237.4,1142.3 1363.6,1056.5 1363.6,855.8 1347.7,846.6 1346.2,770.5 1371.7,755.2 1418.7,784.8 1419.2,843 1525.9,907.9 1553.7,885.1 1557.1,714.9 1603,685.3 1608.1,563.2 1536,524.1 1431.8,588.1 1432.8,523.4 1418.5,513.9 1418.2,371.2 1403.2,363 1401.9,222.4 1338.2,191.8 1184.3,268.7 1195.2,487.3 1123.6,526.7 1122.3,503.2 1016.6,442.2 928.2,488.1 928.7,503.7 925.4,505.3 925.9,520.8 916.5,525.7 925.7,621.9 901.2,635.5 918.5,781.5 906.8,787.6"]},{"n":"Дом 2","pts":["1459,1103 1577,1177.5 1860.9,964.6 1935,186.4 1815.5,135.8 1800.7,144.5 1782.3,136.3 1634.2,215 1626.5,475.4 1610.6,487.2 1603.4,685.3 1557,714.8 1553,915.3 1460.6,979.4"]}]},"mons":{"ph":["img/mons-hero.webp","img/mons-s1.webp","img/mons-s2.webp","img/mons-s3.webp"],"gp":"img/mons-gp.webp","w":2880,"h":1360,"desc":"Проект на северо-востоке столицы — в Бутырском районе, в границах 17-го проезда Марьиной Рощи, улицы Фонвизина и Огородного проезда.","b":[{"n":"Дом 1","pts":["1246.9,1009 1460.7,940.4 1501.9,996.2 1976.8,836.9 1984.9,790.6 1987.8,789 1989.4,786.7 1989.1,785 1985.3,781.3 2029,573.2 2030.4,572.8 2030.8,571.4 2030.8,569.9 2019.9,558.4 2029.9,514.2 2015.6,500.2 2016,494.8 1958.4,435.9 1952.7,437.9 1943.8,428.7 1877.8,447.5 1875.6,469.6 1864,473.9 1853.9,544.1 1844.4,546.9 1838.8,592 1832.3,594.4 1821.9,675 1762.4,695.2 1771,607.9 1758,592.8 1768.7,506 1747,481.8 1748.3,469.3 1711.3,428.4 1623.5,451.9 1622.2,471.6 1609.2,475.6 1607.1,521.9 1604.1,522.4 1598.4,606.4 1592.8,608.9 1593.1,621.7 1563.7,582.9 1548.9,587.2 1533.3,567.8 1460.6,588.2 1460.6,611 1452.4,613.5 1452.7,625.3 1444.5,627.6 1444.5,640.6 1441.9,641.3 1441.9,728.4 1433.8,730.4 1433.5,800.1 1432,800.9 1415.4,774.6 1347.2,792.7 1346.7,782 1340.1,771.3 1339.8,722.8 1332.9,712.8 1331.9,639.3 1318.9,619.9 1318.4,599.5 1289.8,556.1 1285.7,556.3 1280.8,550.2 1194.8,573.9 1195.3,584.9 1189.7,586.2 1191,609.9 1174.1,613.8 1192.2,908.1"]}]},"gertzena":{"ph":["img/gertzena-hero.webp","img/gertzena-s1.webp","img/gertzena-s2.webp","img/gertzena-s3.webp"],"gp":"img/gertzena-gp.webp","w":2880,"h":1360,"desc":"Проект в Бирюлеве Восточном — районе на юге Москвы с развитой инфраструктурой и обилием городской зелени. Квартал граничит с Бирюлёвским лесопарком и фруктовым садом.","b":[{"n":"Дом 1","pts":["1759,966.4 1763,967.1 1821.9,806.8 1831.6,671 1782.5,661.8 1776.7,675.8 1739.9,669.4 1706.7,747.9 1706.2,755.2 1698.9,772.4 1662.3,764.7 1656.1,777.3 1627.9,772.6 1634.7,628.8 1585.7,618.4 1568.7,653.8 1559.1,651.7 1520.3,729 1520.3,741.3 1515.6,750.1 1510.4,908.9 1511.9,909.1 1528.7,875 1657.9,901.8 1671.7,870.6 1746.8,887 1743.7,949.3 1749.1,950 1750.6,958.4 1758.8,959"]},{"n":"Дом 2","pts":["1281.3,861.9 1323.9,845.4 1363.6,724.7 1360.9,595.6 1353,594.9 1352.8,587.5 1350.5,587.2 1350.5,583.6 1290.5,571.1 1247.1,640.1 1247.9,677.6 1244.3,683.5 1206.3,674.8 1194.3,462.1 1190.4,461.9 1189.7,440.9 1126.4,429.9 1076.6,493.3 1077.6,510.4 1073.8,517.3 1085.5,631.9 1068.1,628.6 1047.7,655.5 1051.2,656.1 1067.1,817.8 1145,833.9 1189.9,763.4 1258.1,778.2 1257.6,781 1259.6,781.3 1260.7,800.1 1263.2,800.1 1266,860.4"]}]},"perviy":{"ph":["img/perviy-hero.webp","img/perviy-s1.webp","img/perviy-s2.webp","img/perviy-s3.webp","img/perviy-s4.webp"],"gp":"img/perviy-gp.webp","w":2880,"h":1360,"desc":"Проект Брусники в городе Видное Московской области. Шесть домов переменной высотности от 5 до 14 этажей. Архитекторы — голландское бюро. В квартале будут проживать более четырех тысяч человек.","b":[{"n":"Дом 10","pts":["1076.4,1138.6 1392.8,1252.8 1587.9,1069.1 1590,876.2 1586.6,875.2 1586,827.5 1581.4,826.6 1581.4,822.4 1575.6,820.5 1575.6,801.6 1574.1,800.6 1574.1,790.2 1516.9,774.7 1506.5,783.8 1487.9,777.7 1424,826.9 1424.3,861.8 1412.7,871.3 1413,988.7 1369.6,1020.2 1369.3,1024.1 1364.4,1022 1359.5,1026.9 1331,1018.9 1331,1013.4 1327.1,1011.9 1352.1,993.3 1350,881.4 1344.5,879.5 1344.2,850.5 1315.4,841.6 1315.1,838.6 1292.8,832.1 1290.7,834.6 1281.5,830.9 1253.7,851.4 1252.8,846.5 1249.1,845 1249.1,841.6 1239.9,837.9 1239,821.4 1235,820.2 1234.7,806.8 1180,791.5 1169.6,798.8 1158.6,795.1 1081.4,847.4 1082.3,857.1 1079.1,860.3 1080,877.7 1076.4,880.4 1076.8,885.5 1069.5,890.5 1071.8,932.7 1067.2,938.2"]},{"n":"Тихий дом","pts":["454.5,338.7 638.6,374.8 703.1,342.7 692.4,232.9 710.1,225.6 709.6,220.4 740.2,209.3 739.3,204.5 704.7,198.7 674.2,214.6 630.1,206.3 623.7,135.7 572.4,126.5 505.6,152.7 511.4,212.7 493.3,220.6 493,223.7 468.8,233.3 468.9,236 456.1,241.5 457.9,264.8 446,269.8"]},{"n":"Дом 9","pts":["897.7,886.6 935.1,862.1 931.8,796.7 871.6,777.5 645.7,912.5 652.6,984.5 924.1,1080.4 1068.6,978.6 1067.2,938.2 1071.8,932.7 1069.5,890.5 1076.8,885.5 1076.4,880.4 1080,877.7 1079.1,860.3 1082.3,857.1 1081.4,847.4 1128.9,815.6 1128.3,800 1105.4,793.3 1105.1,790.9 1083.4,784.7 1082.5,786.3 1075.1,784.1 1051.9,799.4 1045.8,797.6 906.9,887 903.7,885.7 900.7,888.1"]},{"n":"Дом 12","pts":["1777.3,834.9 1824.7,850.2 1959.8,727.6 1972.6,519.5 1970,519 1970.2,514 1960.8,512.7 1960.7,501.1 1959,500.6 1959,486.3 1909.6,474.5 1901.3,482.4 1885.4,478.3 1833.7,517.8 1832.3,547.9 1816.5,559.6 1816,577.5 1696,547.9 1696,530.5 1693,529.9 1693,525.8 1689.1,525 1689.2,506.5 1681.9,505.5 1682.1,497.1 1633.4,485.6 1627,492 1616.6,488.9 1564,524.1 1563.7,554.8 1554.8,562.2 1553.5,597.7 1548.4,602 1545.9,773.1 1595.4,788.1 1595.6,681.7 1644.9,645.2 1655.4,647.7 1683,627.8 1771.7,650.4 1771,678.4 1784.3,681.4"]},{"n":"Наземный паркинг","pts":["598.1,894.4 647.1,911.5 870.3,778.7 875.9,779.7 912.1,759.3 910.6,726.6 957.1,699 961.2,700.6 1031.6,659.7 1030.6,620.4 996.1,610.4 925.4,615.3 916,612.5 907.8,612.5 896.1,619.4 843.2,622.2 646.4,725.9 587.6,814.1"]},{"n":"Дом 8","pts":["1220.4,774 1316.7,802.7 1359.5,771.8 1358.4,681.9 1354.7,680.9 1353.8,657.6 1317.1,647.6 1317,644.4 1297.1,639.5 1296.9,633.7 1267.6,626.4 1262.1,630 1254.8,628.2 1251.5,630.5 1208,619.5 1173.1,642.4 1173.6,668.6 1171.3,670.4 1173.6,720.8 1161.7,716.6 1158.5,642.2 1154.3,641.5 1153.6,628 1134.8,623.2 1134.4,619.3 1115.6,614 1112.6,617.2 1102.7,613.3 910.8,726.6 915.9,791.7 931.8,796.7 932.4,823.9 974.2,837.6 1019.8,807.1 1027.4,808.6 1045.8,797.6 1051.9,799.4 1075.1,784.1 1082.5,786.3 1083.4,784.7 1105.1,790.9 1105.4,793.3 1128.3,800 1128.9,815.6 1158.6,795.1 1169.6,798.8 1180,791.5 1221.1,802.9"]},{"n":"Дом 13","pts":["1986.3,897.7 2072.8,921.4 2165.5,818.8 2251.6,840.7 2250.5,851.7 2242.9,861.4 2231.1,960 2288.3,974.8 2325.6,956.4 2416.5,842.5 2448.7,591.3 2354.7,570.4 2294.4,636.7 2289.6,687 2151,655.1 2152.4,634.6 2147.3,633 2148.4,610.1 2137.7,608.5 2138.1,599.5 2083.4,587.2 2077,593.9 2065.6,590.7 2021,630.7 2019.6,654.5 2011.8,661.5 2009.4,701.2 2000.2,710"]},{"n":"Дом 11","pts":["1591.6,940.8 1688.1,969.7 1775.6,888.3 1785.2,682 1770.9,677.6 1771.6,651 1758.6,648.7 1758.6,646.6 1683,627.9 1655.9,648.2 1645,644.7 1595.1,681.9"]},{"n":"Дом 7","pts":["1358.2,721.3 1406.1,736.9 1548.7,634.2 1549,600.1 1554.5,594 1556.1,560.3 1558.2,553.9 1557.4,533.3 1550.3,530.5 1550.1,523.6 1528.1,517.7 1527.9,514.7 1484.7,503.9 1457.7,521.4 1408.2,509.2 1405.6,511.7 1377.7,504.6 1353.6,520.9 1317.8,512 1156.8,607.8 1160.7,672.2 1171.8,676.4 1171.3,670.4 1173.6,668.6 1173.1,642.4 1208,619.5 1251.5,630.5 1254.8,628.2 1262.1,630 1267.6,626.4 1296.9,633.7 1335.5,608.9 1350.6,613.1 1350.1,619.5 1346,621.8 1346.9,655.3 1353.8,657.6 1354.7,680.9 1358.4,681.9"]}]},"metronom":{"ph":["img/metronom-s1.webp","img/metronom-s2.webp","img/metronom-s3.webp","img/metronom-s4.webp"],"gp":"img/metronom-gp.webp","w":2880,"h":1361,"desc":"Проект в одном из самых зелёных округов столицы — Восточном. До национального парка «Лосиный остров» всего 12 минут прогулочным шагом.","b":[{"n":"Дом 2","pts":["1292,1028.7 1278.6,751.5 1260,723.3 1260,671.3 1254.7,666 1254.7,630.7 1199.8,546.7 1138.1,565.5 1138.1,550.8 1136.7,550.8 1134.7,512.3 1099.9,457.9 1084.8,462.7 1066.9,432.7 948.4,467.7 977.6,712.4 969,715.3 969,710.9 969.8,710 969.8,707 967.6,704.8 965.4,687.6 938.2,635.5 741.7,696.2 727.6,624.5 712.3,593.7 702.8,538.4 665.9,462.1 572,487.5 578.6,516.6 567.4,520.3 580.1,578.6 574.2,581 633.5,852.9 771.9,1218.7"]},{"n":"Дом 1","pts":["1743.2,870.9 2359.4,651.2 2420.7,380.7 2411.4,372.2 2416.7,346.9 2421.7,344.5 2421.7,340.4 2420.4,339.1 2429.4,302 2408.2,284.8 2411.2,269.4 2338.4,203.5 2263.4,227 2257.7,262.2 2254.7,263.4 2254.5,268.6 2255.7,269.9 2255.7,273.9 2241.6,279 2218.3,402.2 2192.7,377.1 2173.5,383 2188.7,294.5 2184.3,289.7 2185.8,287.4 2183.7,285.3 2186.9,260.8 2130.5,207 2038.5,234.3 2035.6,258.9 2032.3,259.8 2032.3,265.5 2033.8,267 2022,355.5 2003.1,335.7 1957.2,349.9 1970.2,241 1963.5,233.9 1968.1,196.8 1970.9,193.4 1970.9,189.6 1969,189.6 1973.1,151.5 1928.2,107.2 1826.9,135.8 1826.9,145.5 1792.3,156.8 1790.1,193 1781.4,195 1767.6,376.1 1686.4,399.9 1686.4,416.3 1636.1,353.2 1542.6,380.3 1542.6,405.6 1540.2,407 1540.2,410.2 1531.9,412.1 1527.2,574"]},{"n":"Павильон","pts":["1395,997.3 1645.3,908.1 1646.4,886.2 1649.8,884.9 1650,880.3 1616.8,832.1 1363.6,918.6 1363.6,922.4 1365.6,925 1366.1,950.8"]}]},"rublevskie-dvory":{"ph":["img/rublevskie-dvory-s1.webp","img/rublevskie-dvory-s2.webp","img/rublevskie-dvory-s3.webp"],"gp":"img/rublevskie-dvory-gp.webp","w":2880,"h":1360,"desc":"","b":[{"n":"Дом 3","pts":["2079.3,1079.3 2164.7,1048.3 2178.8,898.4 2238.3,941.7 2235.6,971.5 2283.7,1007 2372.3,975.7 2387.6,849.2 2378.2,841.5 2379.5,825.9 2374.9,822.6 2374.9,818.5 2345.3,797.3 2341.7,798.6 2317.7,781.8 2311,784.3 2301.1,777.2 2293.7,779.5 2287,774.4 2283.5,775.4 2275.6,769 2271.7,770.5 2272,765.2 2252.3,750.9 2250.3,751.1 2238.5,742.7 2235.7,744 2226,736.6 2169.3,754.2 2160.1,861.4 2135.4,843 2135.6,837.4 2118.5,824.4 2114.4,826.2 2107.3,820.6 2149,808.2 2160.9,674 2150.4,665.9 2153.3,634.2 2106.5,601.6 2094.7,604.8 2085,597.4 1997,623.5 1996.7,633.2 1995,633.9 1993.9,654.6 1984,657.4 1975.3,784.3 1967.4,778.2 1950.8,783.6 1923.5,762.6 1915.8,764.9 1905.6,756.5 1900.2,757.8 1883.6,744.5 1877,746.5 1873.7,743.7 1847.9,750.9 1847.4,756.2 1830.8,760.6 1830.5,773.9 1824.7,775.9 1820.3,861.9"]},{"n":"Дом 2","pts":["1537.3,1268.6 1862.4,1156.2 1863.5,1116.4 1869.6,1114 1871,1112.1 1875.7,1023 1875.2,1021.8 1869.3,1016.1 1870.6,980.2 1870.8,978.4 1853.4,962.7 1853.3,958.6 1828.6,937.7 1825.9,938.7 1778.5,898.5 1766.3,902.4 1761.3,897.7 1737,905.7 1691.2,866 1685.9,865.9 1672.1,870.4 1669.4,867.2 1663.6,868.9 1646.3,854.6 1646.3,849 1637.4,841.5 1633.9,842.5 1623.5,833.5 1611.4,836.9 1604.2,830.3 1562.7,843 1562.4,852.1 1556.7,853.6 1556.6,859.7 1548.6,861.1 1548.7,872.7 1545.3,873.7 1543.8,874.9 1543.5,876.2 1543.6,909.1 1548.2,913.3 1547.6,950.8 1682.7,1075.4 1681.7,1101.9 1772.5,1187.3 1640.4,1233 1641.1,1193.3 1646.8,1191.1 1648.9,1188.7 1650.9,1126.2 1643.9,1119.2 1644.2,1082.1 1627,1064.4 1626.9,1060.8 1613.3,1047.6 1609.7,1048.7 1600.3,1039.8 1584.7,1044.7 1579.2,1038.5 1568.1,1041.7 1561.2,1034.7 1557.8,1035.9 1551,1028.7 1548.5,1029.8 1541.8,1023.3 1523,1029.6 1517.6,1023.9 1512.8,1025.7 1499.1,1011.9 1486.6,1016.7 1478.2,1008.4 1471.3,1010.1 1471.2,844.4 1411,789.3 1283.2,828.1 1285.8,993 1287.3,994.2 1287.6,1011 1344.1,1068.6 1411.9,1045.8 1412.4,1103.8 1419.7,1111.1 1419.7,1147.7"]}]},"belata":{"ph":["img/belata-hero.webp","img/belata-s1.webp","img/belata-s2.webp","img/belata-s3.webp"],"gp":"img/belata-gp.webp","w":2880,"h":1360,"desc":"Зелёный современный квартал с самодостаточной социальной, досуговой и коммерческой инфраструктурой. Проект Брусники находится в центральной части подмосковных Люберец, в 10 минутах от метро Котельники.","b":[{"n":"Дом 4","pts":["732.6,653.6 931,889 1079.6,820.1 1034.7,449.9 1014.9,431 1009.3,432.5 1008.3,413.9 977.1,382.7 895,415.5 889.2,375 877.6,362.4 863.3,271.8 837.3,245.9 830.8,248.8 816.7,236.4 799.1,243.2 794.2,237.4 740.6,253.8 738.4,251.7 656.5,280 678.1,375.1 669.4,379.7 696.1,499.2 707.4,510.6"]},{"n":"Дом 1","pts":["1154,1060.2 1579.6,1251.6 1752.8,991.1 1771.6,796.1 1678.3,761.7 1676.9,765.1 1610.2,739.9 1596.9,759 1588.1,755.9 1558.4,796.4 1558.8,803.2 1548.2,816.5 1547.9,819.9 1537.3,829.8 1537.7,879.8 1544.8,881.5 1542.4,959.5 1534.3,956.1 1529.9,961.9 1500.2,950.6 1492.4,962.2 1484.9,959.5 1462.1,992.1 1459.2,991.6 1452.7,999.1 1440,995.2 1433.9,1001.7 1374.8,979.2 1373.4,892.9 1381.6,885.1 1380.9,807.8 1370.5,801.5 1368.7,742.3 1268.9,704.5 1258.9,713.3 1195.2,688.1 1172.6,711.3 1163.2,707.7 1124.6,749.6 1129.9,807.5 1120.8,817 1130.4,892.9 1140.2,897.5 1146.4,970.5 1138.9,978.7 1144.8,1040.8 1152.1,1044.6"]}]},"dom-a":{"ph":["img/dom-a-s1.webp","img/dom-a-s2.webp","img/dom-a-s3.webp"],"gp":"img/dom-a-gp.webp","w":2880,"h":1360,"desc":"Новый проект расположен рядом с метро «Павелецкая» и выполнен в стиле современного американского традиционализма.","b":[{"n":"Дом 1","pts":["1290.6,1295.7 2041.4,891 2055.3,690 2011.4,675.4 2012.1,660.5 1985.1,652.7 1986,645.1 1957.8,635.8 1948.7,640.7 1917,630.1 1893.7,641.4 1786.3,608.1 1787.3,544.7 1772.2,539.4 1775.8,403.7 1762.2,399.8 1764.1,362.5 1717.4,348.9 1719,225.3 1722.4,225.3 1722.4,220.4 1718.2,219.8 1718,209.1 1564.2,173.5 1548.6,178 1450.1,156.1 1450,146.7 1313.9,115.7 1227,137.1 1227,146.8 1214.6,151.1 1214.6,160.7 1210.8,160.7 1210.8,165.4 1213.3,165.4 1213.7,258.9 1191,262.6 1191,271.6 1185.1,273.7 1185.1,292.8 1180.8,294.2 1180.8,303.3 1175,305.9 1179.3,442.6 1161,448.6 1166,648.7 1156.9,652.4 1159.9,738.1 1137.4,729.2 1137.2,716.7 1136.1,716.7 1136.7,695.3 1112,685 1084.2,696.1 1055.2,684 896.7,744 896.7,763 846.4,782.1 846.4,808.2 837.9,812.3 849,1054.3"]}]}};
+const BY_SLUG = Object.fromEntries(PROJ.map(p=>[p.slug,p])), BY_ID = Object.fromEntries(PROJ.map(p=>[p.id,p]));
+let DATE = "26.11.2026";
+
+/* ---------- Условия реализации ---------- */
+const T = [
+ {sec:"Субсидированная ипотека", sub:"Первый квартал · ПВ 20% · ставка на весь срок", hi:"от 8,5%", cards:[
+   {p:["perv"], b:null, title:"Первый квартал", who:"Совкомбанк, Альфа-Банк · базовая", rates:[["Базовая, на весь срок","12,49–12,59%"]]},
+   {p:["perv"], b:null, title:"Первый квартал", who:"Дом.РФ · семейная", rates:[["Семья с 2 детьми","8,5%"],["Семья с 1 ребёнком","10,5%"]]}
+ ]},
+ {sec:"Семейная ипотека", sub:"От акционной цены", hi:"от 3%", cards:[
+   {p:["perv"], title:"Первый квартал · 15 лет", who:"Дом.РФ · от акционной цены", rates:[["Семья с 2 детьми","8,5%"],["Семья с 1 ребёнком","10,5%"]]},
+   {p:["mons","izdanie"], title:"МОНС и Издание, 1 и 2 очередь · 15 лет", who:"Семейная ипотека · ПВ 50%", rates:[["ПВ 50%, срок 15 лет","3,9%"]]},
+   {p:["gertzena"], b:"Дом 2", title:"Квартал Герцена, дом 2 · 15 лет", who:"СберБанк · от акционной цены", rates:[["1 ребёнок","11%"],["2 детей","9%"],["3 детей","7%"],["4 детей / ребёнок-инвалид","5%"],["5 детей","3%"]]},
+   {p:["gertzena"], b:"Дом 2", title:"Квартал Герцена, дом 2 · 30 лет", who:"СберБанк · от акционной цены", rates:[["1 ребёнок","12%"],["2 детей","10%"],["3 детей","8%"],["4 детей / ребёнок-инвалид","6%"],["5 детей","4%"]]}
+ ]},
+ {sec:"Рассрочка", sub:"Без удорожания · по проектам", hi:"от ПВ 10%", cards:[
+   {grp:"МОНС и Издание, 1 очередь", p:["mons","izdanie"], b:{izdanie:"Дом 1"}, title:"МОНС и Издание, 1 очередь", who:"20% + 0,5%", warn:"Не работает акция", kv:[["ПВ","20%"],["Платёж","0,5% от остатка в месяц"],["Срок","до 09.2027"]]},
+   {grp:"МОНС и Издание, 1 очередь", p:["mons","izdanie"], b:{izdanie:"Дом 1"}, title:"МОНС и Издание, 1 очередь", who:"40 / 20 / 40", split:[[40,"сейчас"],[20,"через полгода"],[40,"июль 2027"]]},
+   {grp:"Издание, 2 очередь", p:["izdanie"], b:"Дом 2", title:"Издание, 2 очередь", who:"40 / 30 / 30", split:[[40,"сейчас"],[30,"через 9 мес"],[30,"ещё через 9 мес"]]},
+   {grp:"Издание, 2 очередь", p:["izdanie"], b:"Дом 2", title:"Издание, 2 очередь", who:"50% + 1%", kv:[["ПВ","50%"],["Платёж","1% от остатка в месяц"],["Срок","2 года"]]},
+   {grp:"Первый квартал", p:["perv"], title:"Первый квартал", who:"ПВ 20% + 0,5%", warn:"Не работает акция", kv:[["ПВ","20%"],["Платёж","0,5% от остатка в месяц"],["Срок","до 11.2027"]]},
+   {grp:"Первый квартал", p:["perv"], title:"Первый квартал · лоты от 90 м²", who:"ПВ 10% + 0,5%", warn:"Не работает акция", kv:[["ПВ","10%"],["Лоты","от 90 м²"],["Платёж","0,5% от остатка в месяц"],["Срок","до 11.2027"]]},
+   {grp:"Рублёвские дворы", p:["rublevskie-dvory"], title:"Рублёвские дворы", who:"ПВ от 50% + 2%", kv:[["ПВ","от 50%"],["Платёж","2% от остатка, не менее 50 000 ₽"],["Срок","24 месяца"]]},
+   {grp:"Рублёвские дворы", p:["rublevskie-dvory"], title:"Рублёвские дворы", who:"ПВ от 60% + 1%", kv:[["ПВ","от 60%"],["Платёж","1% от остатка, не менее 50 000 ₽"],["Срок","24 месяца"]]},
+   {grp:"Белата", p:["belata"], title:"Белата · квартиры от 2С", who:"ПВ от 50% + 2%", kv:[["ПВ","от 50%"],["Платёж","2% от остатка, не менее 50 000 ₽"],["Срок","24 месяца"]]},
+   {grp:"Белата", p:["belata"], title:"Белата", who:"ПВ от 60% + 1%", kv:[["ПВ","от 60%"],["Платёж","1% от остатка, не менее 50 000 ₽"],["Срок","24 месяца"]]}
+ ]},
+ {sec:"Траншевая ипотека", sub:"ПВ от 20,1%", hi:"100 000 ₽", cards:[
+   {p:["perv"], title:"Первый квартал", who:"до 08.2027", kv:[["ПВ","20,1%"],["Первый транш","10%"]]},
+   {p:["mons","izdanie","gertzena"], b:{izdanie:"Дом 1",gertzena:"Дом 2"}, title:"МОНС, Издание дом 1, Герцена дом 2", who:"до 08.2027", kv:[["ПВ","20,1%"],["Первый транш","100 000 ₽"],["Мин. платёж","1 690 ₽"]]},
+   {p:["izdanie"], b:"Дом 2", title:"Издание, дом 2", who:"3 года · вариант 1", kv:[["ПВ","20,1%"],["Первый транш","10%"]]},
+   {p:["izdanie"], b:"Дом 2", title:"Издание, дом 2", who:"3 года · вариант 2", kv:[["ПВ","30,1%"],["Первый транш","100 000 ₽"],["Мин. платёж","1 690 ₽"]]},
+   {p:["rublevskie-dvory"], title:"Рублёвские дворы", who:"на 2 года", kv:[["ПВ","20,1%"],["Первый транш","40%"]]},
+   {p:["belata"], title:"Белата", who:"на 2 года · только крупные квартиры", kv:[["ПВ","20,1%"],["Первый транш","30%"],["Квартиры","1С от 50 м² · 2С от 75 м² · 3С от 95 м²"]]}
+ ]}
+];
+T.forEach(s=>s.cards.forEach(c=>c.p=c.p.map(x=>x==="perv"?"perviy":x)));
+const HOOK = {
+  gertzena:["Семейная Сбер от 3%","Транш 100 000 ₽"], mons:["Семейная 3,9% при ПВ 50%","Рассрочка 20% + 0,5%","Рассрочка 40/20/40","Транш 100 000 ₽"],
+  izdanie:["Семейная 3,9% при ПВ 50%","Рассрочка от ПВ 20%","Транш на 3 года"], perviy:["Семейная 8,5% на весь срок","Базовая 12,49%","Рассрочка от ПВ 10%"],
+  metronom:["Условия уточняются"], "rublevskie-dvory":["Рассрочка 24 мес","Транш ПВ 20,1%"], belata:["Рассрочка 24 мес","Транш 30%"], "dom-a":["Условия уточняются"]
+};
+const appliesTo = (c, slug, bld) => c.p.includes(slug) && (!c.b || !bld || (typeof c.b==="string" ? c.b===bld : (!c.b[slug] || c.b[slug]===bld)));
+
+/* ---------- helpers ---------- */
+const fmt = v => v==null ? '—' : Math.round(v).toLocaleString('ru-RU').replace(/\s/g,' ')+' ₽';
+const mln = v => (v/1e6).toFixed(1).replace('.',',');
+const area = v => String(v).replace('.',',')+' м²';
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const RT = r => r===0?'Студия':r+'-комн.';
+const RT_SHORT = r => r===0?'Студия':r+'С';
+const ddmm = d => d ? d.split('-').reverse().join('.') : '';
+let FL = [];
+const PL = {}, PLDONE = {}, PLREQ = {};
+const BLOBS = {};
+function toBlobUrl(d){ if(!d||!d.startsWith('data:')) return d; if(BLOBS[d]) return BLOBS[d];
+  try{ const i=d.indexOf(','), mime=d.slice(5,d.indexOf(';')), bin=atob(d.slice(i+1)), u=new Uint8Array(bin.length); for(let k=0;k<bin.length;k++) u[k]=bin.charCodeAt(k);
+    return BLOBS[d]=URL.createObjectURL(new Blob([u],{type:mime})); }catch(e){ return d; } }
+function loadPlans(slug){
+  if(PLREQ[slug]) return PLREQ[slug];
+  return PLREQ[slug] = fetch('plans-'+slug+'.json').then(r=>r.json()).then(d=>{for(const k in d) PL[k]=toBlobUrl(d[k]);PLDONE[slug]=true;const y=scrollY;render(true);scrollTo(0,y)}).catch(()=>{PLDONE[slug]=true});
+}
+const app = document.getElementById('app');
+
+/* Скидка агента по датам (по московскому времени) */
+const AG_SCHED=[["2026-11-28",3],["2026-12-04",2.5],["2026-12-07",2],["2026-12-10",1.5],["2026-12-14",1],["2026-12-17",0.5],["2026-12-20",0]];
+const AG_TODAY=(()=>{try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}catch(e){return new Date().toISOString().slice(0,10)}})();
+const AGENT=(()=>{let v=3; for(const [d,pc] of AG_SCHED) if(AG_TODAY>=d) v=pc; return v;})();
+const AGS=String(AGENT).replace('.',',');
+const AG_NEXT=AG_SCHED.find(([d,pc])=>d>AG_TODAY&&pc!==AGENT);
+const dm=iso=>iso.slice(8,10)+'.'+iso.slice(5,7);
+const prevDay=iso=>{const t=new Date(iso+'T12:00:00Z'); t.setUTCDate(t.getUTCDate()-1); return t.toISOString().slice(0,10);};
+const AG_WHEN = AGENT>0 ? (AG_NEXT?` до ${dm(prevDay(AG_NEXT[0]))} включительно, с ${dm(AG_NEXT[0])} — ${String(AG_NEXT[1]).replace('.',',')}%`:'') : '';
+const AG_NO = ['rublevskie-dvory','belata','dom-a'];
+const agentOk = (slug,b) => AGENT>0 && !AG_NO.includes(slug) && !(slug==='izdanie' && b==='Дом 2');
+const AG_RULE = 'Распространяется на все проекты, кроме Рублёвских дворов, Квартала «Белата», Издания дом 2 и Дома «А».';
+function prep(f){
+  f.final = f.promo || f.site;
+  f.save = f.base - f.final;
+  f.pct = Math.round(f.save/f.base*100);
+  f.ppm = Math.round(f.final/f.a);
+  f.slug = BY_ID[f.c].slug;
+  f.ag = agentOk(f.slug,f.b) ? Math.round(f.final*(1-AGENT/100)) : null;
+  return f;
+}
+const flatsOf = slug => FL.filter(f=>f.slug===slug);
+function stats(list){
+  const fin=list.map(f=>f.final);
+  return {n:list.length, min:Math.min(...fin), max:Math.max(...fin), ppm:Math.min(...list.map(f=>f.ppm)),
+    rooms:[0,1,2,3,4].map(r=>[r,list.filter(f=>r===4?f.r>=4:f.r===r).length]).filter(x=>x[1]),
+    promo:list.filter(f=>f.promo).length, del:[...new Set(list.map(f=>f.d))]};
+}
+
+/* ---------- nav ---------- */
+function nav(route){
+  const a = (h,t,on,cls='',extra='') => `<a href="#${h}" class="${cls}${on?' on':''}">${t}${extra}</a>`;
+  document.getElementById('nav').innerHTML =
+    a('home','Что продавать',route==='home') + a('terms','Условия реализации',route==='terms') +
+    `<hr><span class="cap">Квартиры по ЖК</span>` +
+    PROJ.filter(p=>!p.off).map(p=>a('p-'+p.slug,p.name,route==='p-'+p.slug,'sub'+(AGENT>0&&!AG_NO.includes(p.slug)?' agn':''),`<i>${flatsOf(p.slug).length}</i>`)).join('');
+}
+
+/* ---------- map ---------- */
+const X0=37.15, Y0=55.93, K=2000, CO=Math.cos(55.75*Math.PI/180);
+const px = (lat,lon)=>[(lon-X0)*CO*K, (Y0-lat)*K];
+const path = pts => pts.map((q,i)=>{const [x,y]=px(q[0],q[1]);return (i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)}).join(' ');
+const MKAD=[[55.911,37.585],[55.909,37.65],[55.897,37.705],[55.882,37.733],[55.857,37.80],[55.83,37.835],[55.79,37.843],[55.75,37.842],[55.71,37.837],[55.68,37.83],[55.655,37.80],[55.636,37.762],[55.61,37.735],[55.578,37.712],[55.573,37.68],[55.574,37.62],[55.58,37.575],[55.592,37.53],[55.62,37.495],[55.66,37.445],[55.69,37.41],[55.72,37.385],[55.77,37.368],[55.82,37.39],[55.85,37.40],[55.87,37.44],[55.89,37.48],[55.905,37.53],[55.911,37.585]];
+const RIVER=[[55.84,37.15],[55.80,37.30],[55.79,37.39],[55.80,37.43],[55.775,37.46],[55.755,37.50],[55.745,37.54],[55.72,37.555],[55.725,37.59],[55.745,37.605],[55.75,37.625],[55.735,37.66],[55.71,37.67],[55.69,37.70],[55.665,37.74],[55.645,37.78],[55.62,37.83],[55.59,37.88],[55.56,37.95]];
+function mapSvg(){
+  const g=px(55.752,37.617); const W=900, H=(Y0-55.50)*K;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема Москвы с проектами Брусники"><rect width="${W}" height="${H}" fill="var(--land)"/>`;
+  s+=`<path d="${path(RIVER)}" fill="none" stroke="var(--river)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>`;
+  s+=`<path d="${path(MKAD)}" fill="#fff" fill-opacity=".6" stroke="var(--mkad)" stroke-width="4" stroke-linejoin="round"/>`;
+  s+=`<circle cx="${g[0]}" cy="${g[1]}" r="34" fill="none" stroke="var(--mkad)" stroke-width="2" stroke-dasharray="5 5"/><circle cx="${g[0]}" cy="${g[1]}" r="4" fill="var(--muted)"/>`;
+  s+=`<text x="${g[0]}" y="${g[1]-12}" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="var(--text)">Кремль</text>`;
+  [["МОСКВА",55.875,37.47,16],["Одинцово",55.675,37.28,12],["Люберцы",55.70,37.905,12],["Видное",55.552,37.68,12]].forEach(([t,a,b,fs])=>{const [x,y]=px(a,b);s+=`<text x="${x}" y="${y}" text-anchor="middle" font-size="${fs}" letter-spacing="${fs>12?4:1}" fill="var(--muted)" opacity=".8" font-family="var(--text)">${t}</text>`});
+  PROJ.forEach(p=>{const [x,y]=px(p.lat,p.lon), r=p.lab==='r';
+    s+=`<g class="pt${p.off?' off':''}" data-slug="${p.slug}" tabindex="0" role="button" aria-label="${esc(p.name)}"><circle class="halo" cx="${x}" cy="${y}" r="18"/><circle class="dot" cx="${x}" cy="${y}" r="${p.off?6:9}"/><text x="${x+(r?16:-16)}" y="${y+5}" text-anchor="${r?'start':'end'}">${esc(p.name.replace(/Квартал |[«»]/g,''))}</text></g>`});
+  return s+`</svg>`;
+}
+
+/* ---------- real map ---------- */
+const MAP = {w:1311, h:1292, ox:316175, oy:163390, z:11};
+function mpx(lat,lon){const n=Math.pow(2,MAP.z)*256, r=lat*Math.PI/180;
+  return [(lon+180)/360*n-MAP.ox, (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n-MAP.oy];}
+const ICON='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 18V8l5-3v13zM8 18V3l6 3v12zM15 18V9l3 2v7z" fill="currentColor"/></svg>';
+const TL={};
+let LMAP=null, MARK={};
+function mapHtml(){
+  return `<div class="lwrap" id="lwrap">
+    <div id="lmap" class="lmap" aria-label="Карта проектов Брусники"></div>
+    <div class="lload" id="lload">Загружаю карту…</div>
+    <button type="button" class="lfull" id="lfull" aria-pressed="false">⤢ Развернуть карту</button>
+    <div class="lhint" id="lhint">Нажмите на карту, чтобы приближать колесом</div>
+  </div>
+  <div class="ljk">${PROJ.map(p=>{const st=stats(flatsOf(p.slug));return `<button type="button" class="chip" data-fly="${p.slug}">${esc(p.name.replace(/Квартал |[«»]/g,''))} <i>от ${mln(st.min)}</i></button>`}).join('')}</div>`;
+}
+function popHtml(p){
+  const st=stats(flatsOf(p.slug));
+  const ag = p.slug==='izdanie'&&AGENT>0?`<span class="tg ag">Скидка ${AGS}% · дом 1</span>`:agentOk(p.slug)?`<span class="tg ag">Скидка агента ${AGS}%</span>`:'';
+  return `<div class="lpop"><span class="eyebrow" style="font-size:12px">${esc(p.place)}</span><b class="lpn">${esc(p.name)}</b>
+    <div class="metro">${p.metro.map(m=>`<span><i style="background:${m[1]}"></i>${m[0]}</span>`).join('')}</div>
+    <div class="lpf num"><div><small>Цена от</small><b>${mln(st.min)} млн ₽</b></div><div><small>В продаже</small><b>${st.n} кв.</b></div><div><small>Сдача</small><b>${st.del.map(d=>d.replace(' квартал',' кв.')).join(', ')}</b></div></div>
+    <div class="chips">${ag}${(HOOK[p.slug]||[]).slice(0,2).map(h=>`<span class="tg b">${h}</span>`).join('')}</div>
+    <div class="pbtns"><a class="btn btn-main" href="#p-${p.slug}">Квартиры ›</a><button class="btn btn-soft" data-tf="${p.slug}">Условия</button></div></div>`;
+}
+function initMap(){
+  const el=document.getElementById('lmap'); if(!el) return;
+  if(!window.L){el.innerHTML='<div class="empty">Карта не загрузилась. Обновите страницу.</div>';return;}
+  if(LMAP){LMAP.remove();LMAP=null;}
+  const B=L.latLngBounds([55.43,37.03],[55.97,38.07]);
+  LMAP=L.map(el,{minZoom:9,maxZoom:14,maxBounds:B,maxBoundsViscosity:1,scrollWheelZoom:false,zoomSnap:0.5,attributionControl:true,zoomControl:true});
+  LMAP.attributionControl.setPrefix(false);
+  const Grid=L.GridLayer.extend({createTile(c){const img=document.createElement('img');img.alt='';const t=TL[c.z], k=c.x+'_'+c.y; if(t&&t[k]){ t[k]=toBlobUrl(t[k]); img.src=t[k]; } return img;}});
+  const layer=new Grid({maxNativeZoom:12,minNativeZoom:9,bounds:B,attribution:'© участники OpenStreetMap'}).addTo(LMAP);
+  const ld=document.getElementById('lload');
+  const load=z=>TL[z]?Promise.resolve():fetch('tiles-'+z+'.json').then(r=>{if(!r.ok) throw new Error(r.status); return r.json();}).then(d=>{TL[z]=d;layer.redraw();});
+  const first=[10,11,9].map(load);
+  Promise.allSettled(first).then(rs=>{ if(ld){ if(rs.every(r=>r.status==='rejected')) ld.textContent='Подложка карты не загрузилась — обновите страницу'; else ld.hidden=true; } return load(12); }).catch(()=>{});
+  MARK={};
+  PROJ.forEach(p=>{const st=stats(flatsOf(p.slug));
+    const icon=L.divIcon({className:'lmk',iconSize:[0,0],html:`<div class="lpin${agentOk(p.slug)||p.slug==='izdanie'?' hot':''}"><span class="lpb">${ICON}${mln(st.min)} млн</span><span class="lpl">${esc(p.name.replace(/Квартал |[«»]/g,''))}</span></div>`});
+    MARK[p.slug]=L.marker([p.lat,p.lon],{icon,riseOnHover:true,title:p.name}).addTo(LMAP).bindPopup(popHtml(p),{maxWidth:320,minWidth:260,autoPanPadding:[30,30],offset:[0,-52]});
+  });
+  LMAP.fitBounds(L.latLngBounds(PROJ.map(p=>[p.lat,p.lon])),{padding:[60,60]});
+  const hint=document.getElementById('lhint'); if(matchMedia('(pointer:coarse)').matches) hint.hidden=true;
+  LMAP.on('click focus',()=>{LMAP.scrollWheelZoom.enable(); hint.hidden=true;});
+  LMAP.on('mouseout',()=>{ if(!document.getElementById('lwrap').classList.contains('on')) LMAP.scrollWheelZoom.disable(); });
+  const wrap=document.getElementById('lwrap'), fb=document.getElementById('lfull');
+  const setFull=on=>{wrap.classList.toggle('on',on);document.body.classList.toggle('noscroll',on);fb.textContent=on?'✕ Свернуть карту':'⤢ Развернуть карту';fb.setAttribute('aria-pressed',on);
+    on?LMAP.scrollWheelZoom.enable():LMAP.scrollWheelZoom.disable(); hint.hidden=true; setTimeout(()=>LMAP.invalidateSize(),50);};
+  fb.onclick=()=>setFull(!wrap.classList.contains('on'));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&wrap.classList.contains('on')) setFull(false);});
+  document.querySelectorAll('[data-fly]').forEach(b=>b.onclick=()=>{const p=BY_SLUG[b.dataset.fly];LMAP.flyTo([p.lat,p.lon],Math.max(LMAP.getZoom(),12),{duration:.6});setTimeout(()=>MARK[p.slug].openPopup(),650);});
+  LMAP.on('popupopen',()=>{document.body.classList.remove('noscroll-pop')});
+}
+
+/* ---------- HOME ---------- */
+function home(){
+  const all=stats(FL);
+  app.innerHTML = `
+  <section class="hero">
+    <div class="hero-main">
+      <span class="eyebrow">Брусника · Москва и область</span>
+      <h1>Что обязательно нужно продавать и покупать</h1>
+      <p>Все ${all.n} квартир в продаже в ${PROJ.length} проектах Брусники в Москве и области, с ценами сайта на ${DATE}. Нажмите на ЖК на карте, чтобы выбрать квартиру.</p>
+      <p class="terms-line">Все формы оплаты без удорожания, от скидочной цены сайта</p>
+      ${AGENT>0?`<div class="hero-note" style="background:var(--agent-soft)"><b style="color:var(--red)">Скидка агента ${AGS}%</b>${AG_WHEN} — ${AG_RULE.charAt(0).toLowerCase()+AG_RULE.slice(1)} Карточки квартир со скидкой обведены красной рамкой.</div>`:`<div class="hero-note"><b>Скидка агента</b> действовала до 19.12 и сейчас не начисляется.</div>`}
+      <div class="hero-note" style="margin-top:0"><b>Как читать цены:</b> чёрная зачёркнутая — базовая цена сайта, красная — цена сайта со скидкой, крупная — цена с действующей акцией сайта (если акции нет, совпадает с красной).</div>
+    </div>
+    <div class="tiles">
+      <div class="tile t-blue"><b>${all.n}</b><span>квартир в продаже в ${PROJ.length} ЖК</span></div>
+      <a class="tile t-peach" href="#terms"><b style="font-size:30px">от 3%</b><span>семейная Сбер, Квартал Герцена, дом 2</span></a>
+      <a class="tile t-sky" href="#terms"><b>8,5%</b><span>на весь срок, Первый квартал</span></a>
+      <a class="tile t-lav" href="#terms"><b>100 тыс</b><span>первый транш, 1 690 ₽/мес</span></a>
+      <a class="tile t-mint" href="#terms"><b>40/20/40</b><span>рассрочка МОНС и Издание 1 оч.</span></a>
+    </div>
+  </section>
+
+  <div class="sechead"><h2>Проекты на карте</h2><span class="fine">Нажмите на ЖК — откроется карточка с кнопкой «Квартиры»</span></div>
+  <section class="mapbox lbox">${mapHtml()}</section>
+
+  <div class="sechead"><h2>Жилые комплексы</h2><span class="fine">Нажмите «Квартиры», чтобы открыть подборку</span></div>
+  <section class="pgrid">${PROJ.map(pcard).join('')}</section>
+  <p class="foot">Цены и наличие — с сайта moskva.brusnika.ru на ${DATE}. Перед бронью сверяйте наличие и цену у застройщика.</p>`;
+  initMap();
+}
+function mapSide(slug){
+  if(!slug) return `<span class="eyebrow">Выберите точку на карте</span><h2>8 проектов Брусники</h2>
+    <p class="intro">Оранжевые — кварталы, по которым загружены все квартиры. Серые — остальные проекты Брусники в Москве и области.</p>
+    <div class="chips">${PROJ.map(p=>`<button class="chip" data-sel="${p.slug}">${esc(p.name.replace(/Квартал |[«»]/g,''))}</button>`).join('')}</div>`;
+  const p=BY_SLUG[slug], st=p.off?null:stats(flatsOf(slug));
+  return `<span class="eyebrow">${esc(p.place)}</span><h2>${esc(p.name)}</h2><p class="intro">${esc(p.intro)}</p>
+   <div class="metro">${p.metro.map(m=>`<span><i style="background:${m[1]}"></i>${m[0]}</span>`).join('')}</div>
+   <div class="pfacts num"><div><small>В продаже</small><b>${st?st.n:p.cnt} кв.</b></div><div><small>Цена от</small><b>${fmt(st?st.min:p.from)}</b></div>
+   <div><small>Срок сдачи</small><b>${st?st.del.join(', '):p.del}</b></div><div><small>${st?'За м² от':'Квартиры'}</small><b>${st?fmt(st.ppm):'не загружены'}</b></div></div>
+   <div class="chips">${HOOK[slug].map((h,i)=>`<span class="tg${i?' b':''}">${h}</span>`).join('')}</div>
+   <div class="pbtns">${p.off?'':`<a class="btn btn-main" href="#p-${slug}">Квартиры ›</a>`}<button class="btn btn-soft" data-tf="${slug}">Условия</button></div>`;
+}
+function selectProj(slug){
+  app.querySelectorAll('.pt').forEach(g=>g.classList.toggle('on',g.dataset.slug===slug));
+  app.querySelectorAll('.pcard').forEach(c=>c.classList.toggle('hl',c.dataset.slug===slug));
+  const ms=document.getElementById('mapside'); if(ms) ms.innerHTML=mapSide(slug);
+}
+function pcard(p){
+  const st=p.off?null:stats(flatsOf(p.slug));
+  return `<article class="pcard" data-slug="${p.slug}">
+    <div class="ptop"><div><span class="eyebrow" style="font-size:13px">${esc(p.place)}</span><h3>${esc(p.name)}</h3></div>
+      <div class="cnt num"><b>${st?st.n:p.cnt}</b><small>квартир</small></div></div>
+    <p class="intro">${esc(p.intro)}</p>
+    <div class="metro">${p.metro.map(m=>`<span><i style="background:${m[1]}"></i>${m[0]}</span>`).join('')}</div>
+    <div class="pfacts num">
+      <div><small>Цена от</small><b>${st?mln(st.min)+' млн ₽':mln(p.from)+' млн ₽'}</b></div>
+      <div><small>Срок сдачи</small><b>${st?st.del.map(d=>d.replace(' квартал',' кв.')).join(', '):p.del.replace(' квартал',' кв.')}</b></div>
+      ${st?`<div><small>За м² от</small><b>${fmt(st.ppm)}</b></div><div><small>С акцией сайта</small><b>${st.promo} кв.</b></div>`:''}
+    </div>
+    ${st?`<div class="rooms">${st.rooms.map(([r,n])=>`<span>${r===4?'4С+':RT_SHORT(r)} · ${n}</span>`).join('')}</div>`:''}
+    <div class="chips">${p.slug==='izdanie'&&AGENT>0?`<span class="tg ag">Скидка ${AGS}% · только дом 1</span>`:agentOk(p.slug)?`<span class="tg ag">Скидка агента ${AGS}%</span>`:`<span class="tg g">Без скидки агента</span>`}${HOOK[p.slug].map((h,i)=>`<span class="tg${i?' b':''}">${h}</span>`).join('')}</div>
+    <div class="pbtns">${p.off?`<span class="fine">Квартиры этого ЖК не загружены</span>`:`<a class="btn btn-main" href="#p-${p.slug}">Квартиры ›</a>`}<button class="btn btn-soft" data-tf="${p.slug}">Условия</button></div>
+  </article>`;
+}
+
+/* ---------- PROJECT LIST ---------- */
+const state = {room:'all', bld:'all', sort:'final-asc', promo:false, nobk:false, shown:30};
+let curSlug=null;
+function bldLabel(slug,b,L){
+  const d=[...new Set(L.filter(f=>f.b===b).map(f=>f.d))].join(', ').replace(/ квартал/g,' кв.');
+  if(slug==='izdanie'){ const n=b.replace(/\D/g,''); return `${n==='1'?'Первая':'Вторая'} очередь (${b.toLowerCase()}) · сдача ${d}`; }
+  return `${b} · сдача ${d}`;
+}
+const OPEN={};
+const bnum=b=>parseInt(String(b).replace(/\D/g,''))||0;
+function bldStats(L,b){const x=L.filter(f=>f.b===b), a=x.map(f=>f.a);
+  return {n:x.length, min:Math.min(...x.map(f=>f.final)), amin:Math.min(...a), amax:Math.max(...a), d:[...new Set(x.map(f=>f.d))].join(', ')};}
+function bldCrop(M,b,i){
+  const pts=b.pts.join(' ').trim().split(/[\s,]+/).map(Number); const xs=pts.filter((_,k)=>k%2===0), ys=pts.filter((_,k)=>k%2===1);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys); const pad=Math.max(x1-x0,y1-y0)*0.35;
+  x0=Math.max(0,x0-pad); y0=Math.max(0,y0-pad); x1=Math.min(M.w,x1+pad); y1=Math.min(M.h,y1+pad);
+  let w=x1-x0, h=y1-y0; const r=4/3; if(w/h<r){const nw=h*r; x0=Math.max(0,x0-(nw-w)/2); w=nw;} else {const nh=w/r; y0=Math.max(0,y0-(nh-h)/2); h=nh;}
+  return `<svg viewBox="${x0} ${y0} ${w} ${h}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="${M.gp}" width="${M.w}" height="${M.h}"/>${b.pts.map(q=>`<polygon points="${q}" class="gpoly on"/>`).join('')}</svg>`;
+}
+function projHead(slug,p,L,st,blds,terms){
+  const M=PMETA[slug]||{ph:[],b:[]}; const open=!!OPEN[slug];
+  const ph=M.ph, hero=ph[0];
+  const bl=blds.map(b=>b.replace('Дом ','')).join(' и ');
+  const mb=(M.b||[]).filter(b=>blds.includes(b.n)&&b.pts.length);
+  const bcards=blds.map(b=>{const s=bldStats(L,b), mbb=mb.find(x=>x.n===b), red=agentOk(slug,b)&&slug==='izdanie', on=state.bld===b;
+    return `<button type="button" class="bcard${red?' red':''}${on?' on':''}" data-bld="${esc(b)}">
+      <div class="bimg">${mbb&&M.gp?bldCrop(M,mbb):`<div class="noplan">${esc(b)}</div>`}<span class="bcnt">${s.n} ${s.n%10===1&&s.n%100!==11?'квартира':(s.n%10>=2&&s.n%10<=4&&(s.n%100<10||s.n%100>=20))?'квартиры':'квартир'}</span>${red?'<span class="akcia" style="top:10px;right:10px">Скидка ${AGS}%</span>':''}</div>
+      <div class="bbody"><div class="brow"><b>${esc(b.replace('Дом','Корпус'))}</b><span>Сдача · ${s.d}</span></div>
+      <div class="brow num"><b class="bpr">от ${fmt(s.min)}</b><span>${String(s.amin).replace('.',',')}–${String(s.amax).replace('.',',')} м²</span></div></div></button>`}).join('');
+  return `
+  <section class="phead">
+    <div class="phead-top">
+      <div class="phead-txt">
+        <span class="eyebrow">${esc(p.name)} · ${esc(p.place.startsWith('МО')?'Московская область':'Москва')}</span>
+        <h1 class="h-big">Квартиры в наличии</h1>
+        <p>${esc(p.place.replace(/^Москва, |^МО, /,''))}, ${p.place.startsWith('МО')?'Московская область':'Москва'} · ${p.metro.map(m=>m[0]).join(', ')}</p>
+        <p>Квартиры ${blds.length>1?'в корпусах '+bl:'в корпусе '+bl} · ${st.n} в продаже · от ${mln(st.min)} млн ₽</p>
+        <p class="terms-line">${[...new Set(terms)].join(' · ')||'Условия реализации уточняются'} · без удорожания</p>
+      </div>
+      <div class="phead-stats num">
+        <div class="tile t-blue"><b>${st.n}</b><span>квартир в продаже</span></div>
+        <div class="tile t-peach"><b style="font-size:22px">${mln(st.min)}–${mln(st.max)} млн ₽</b><span>цены на ${DATE}</span></div>
+      </div>
+    </div>
+    ${hero?`<div class="phead-strip${open?' open':''}"><img src="${hero}" alt="${esc(p.name)}" loading="lazy">
+      <button type="button" class="phbtn" id="phtoggle" aria-expanded="${open}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/></svg>${open?'Свернуть':'Фото и генплан'}</button></div>`:''}
+  </section>
+  ${open?`
+  <section class="about">
+    <div class="about-txt">
+      <span class="eyebrow">О жилом квартале</span>
+      <h2 class="h-big" style="font-size:clamp(30px,4vw,46px)">${esc(p.name)}</h2>
+      <p class="fine" style="font-size:15px">${esc(p.place)}</p>
+      <p>${esc(M.desc||p.intro)}</p>
+      <div class="pbtns"><button type="button" class="btn btn-blue" data-goto="flist">Выбрать квартиру</button><button type="button" class="btn btn-soft" data-gal="0">Открыть галерею</button></div>
+    </div>
+    <div class="mosaic">
+      ${ph[1]?`<button type="button" class="mz big" data-gal="1"><img src="${ph[1]}" alt="" loading="lazy"><span>Проект</span></button>`:''}
+      ${ph[2]?`<button type="button" class="mz" data-gal="2"><img src="${ph[2]}" alt="" loading="lazy"><span>Фото</span></button>`:''}
+      ${M.gp?`<button type="button" class="mz" data-gal="gp"><img src="${M.gp}" alt="" loading="lazy"><span>Генплан</span></button>`:''}
+    </div>
+  </section>
+  ${M.gp?`<div class="sechead"><h2>Генеральный план квартала</h2><span class="fine">Нажмите на дом с квартирами в продаже, чтобы выбрать квартиру</span></div>
+  <section class="gpbox"><svg viewBox="0 0 ${M.w} ${M.h}" role="img" aria-label="Генплан ${esc(p.name)}"><image href="${M.gp}" width="${M.w}" height="${M.h}"/>
+    ${mb.map(b=>{const s=bldStats(L,b.n), pts=b.pts.join(' ').trim().split(/[\s,]+/).map(Number), xs=pts.filter((_,k)=>k%2===0), ys=pts.filter((_,k)=>k%2===1), cx=(Math.min(...xs)+Math.max(...xs))/2, cy=Math.min(...ys);
+      return `<g class="gpb${agentOk(slug,b.n)&&slug==='izdanie'?' red':''}" data-bld="${esc(b.n)}" tabindex="0" role="button">${b.pts.map(q=>`<polygon points="${q}" class="gpoly"/>`).join('')}
+      <g transform="translate(${cx},${Math.max(60,cy-24)})"><rect x="-150" y="-52" width="300" height="64" rx="22" class="gplab"/><text y="-11" text-anchor="middle" class="gptx">${esc(b.n.replace('Дом','Корпус'))} · ${s.n} кв.</text></g></g>`}).join('')}
+  </svg></section>`:''}
+  <div class="sechead"><h2>Квартиры в продаже</h2><span class="fine">${st.n} ${blds.length>1?'в корпусах '+bl:'в корпусе '+bl}</span></div>
+  <section class="bgrid">${bcards}</section>`:''}`;
+}
+function bindHead(slug){
+  const t=app.querySelector('#phtoggle'); if(t) t.onclick=()=>{OPEN[slug]=!OPEN[slug]; const y=scrollY; projectView(slug); scrollTo(0,y);};
+  app.querySelectorAll('[data-bld]').forEach(el=>{const go=()=>{state.bld=el.dataset.bld; state.shown=30; projectView(slug); const f=document.getElementById('flist'); if(f) f.scrollIntoView({block:'start'});};
+    el.addEventListener('click',go); el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});});
+  app.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.goto).scrollIntoView({block:'start'}));
+  app.querySelectorAll('[data-gal]').forEach(b=>b.onclick=()=>{const M=PMETA[slug]; const list=[...M.ph,M.gp].filter(Boolean); const v=b.dataset.gal; openGal(list, v==='gp'?list.length-1:+v);});
+}
+function openGal(list,i){
+  let k=i; const ov=document.createElement('div'); ov.className='gal'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-label','Галерея');
+  const draw=()=>{ov.innerHTML=`<img src="${list[k]}" alt=""><button type="button" class="gx" aria-label="Закрыть">✕</button>${list.length>1?`<button type="button" class="gp gl" aria-label="Назад">‹</button><button type="button" class="gp gr" aria-label="Вперёд">›</button>`:''}<span class="gc">${k+1} / ${list.length}</span>`;
+    ov.querySelector('.gx').onclick=close; const l=ov.querySelector('.gl'), r=ov.querySelector('.gr'); if(l){l.onclick=e=>{e.stopPropagation();k=(k-1+list.length)%list.length;draw()}; r.onclick=e=>{e.stopPropagation();k=(k+1)%list.length;draw()};}};
+  const key=e=>{if(e.key==='Escape') close(); if(e.key==='ArrowLeft'&&list.length>1){k=(k-1+list.length)%list.length;draw()} if(e.key==='ArrowRight'&&list.length>1){k=(k+1)%list.length;draw()}};
+  function close(){ov.remove();document.removeEventListener('keydown',key);document.body.classList.remove('noscroll');}
+  ov.addEventListener('click',e=>{if(e.target===ov) close();}); document.addEventListener('keydown',key); document.body.classList.add('noscroll');
+  draw(); document.body.appendChild(ov); ov.querySelector('.gx').focus();
+}
+function projectView(slug){
+  const p=BY_SLUG[slug]; const L=flatsOf(slug); const st=stats(L);
+  if(curSlug!==slug){Object.assign(state,{room:'all',bld:'all',promo:false,shown:30}); curSlug=slug;}
+  const blds=[...new Set(L.map(f=>f.b))].sort((a,b)=>parseInt(a.replace(/\D/g,''))-parseInt(b.replace(/\D/g,'')));
+  let list=L.filter(f=>(state.room==='all'||(state.room==='4'?f.r>=4:f.r===+state.room))&&(state.bld==='all'||f.b===state.bld)&&(!state.promo||f.promo)&&(!state.nobk||!f.bk));
+  const [k,dir]=state.sort.split('-'); list.sort((a,b)=>(dir==='asc'?1:-1)*(a[k]-b[k])||a.final-b.final);
+  const chip=(key,val,label,count)=>`<button class="chip" data-k="${key}" data-v="${val}" aria-pressed="${String(state[key])===String(val)}">${label}${count!=null?` <i>${count}</i>`:''}</button>`;
+  const terms=[]; T.forEach(s=>s.cards.forEach(c=>{if(c.p.includes(slug)) terms.push(s.sec)}));
+  app.innerHTML = `
+  ${projHead(slug,p,L,st,blds,terms)}
+  <div id="flist" class="sechead"><h2>Выберите квартиру</h2><span class="fine">${esc(p.name)} · цены сайта на ${DATE}</span></div>
+  <section class="filters">
+    ${chip('room','all','Все',L.length)}
+    ${st.rooms.map(([r,n])=>chip('room',String(r),r===0?'Студии':r===4?'4+':r+'-комн.',n)).join('')}
+    ${chip('promo',true,'Только с акцией',st.promo)}
+    ${L.some(f=>f.bk)?chip('nobk',true,'Без брони',L.filter(f=>!f.bk).length):''}
+    <select class="sel blue" id="sort" aria-label="Сортировка">
+      <option value="final-asc">Сначала дешевле</option><option value="final-desc">Сначала дороже</option>
+      <option value="save-desc">Выгода больше</option><option value="ppm-asc">Дешевле за м²</option>
+      <option value="a-asc">Площадь меньше</option><option value="a-desc">Площадь больше</option><option value="fl-desc">Этаж выше</option>
+    </select>
+  </section>
+  ${blds.length>1?`<section class="filters bld-row" aria-label="Очередь / дом"><span class="lbl">Дом:</span>${chip('bld','all','Все дома',L.length)}${blds.map(b=>chip('bld',b,bldLabel(slug,b,L),L.filter(f=>f.b===b).length).replace('class="chip"',agentOk(slug,b)&&slug==='izdanie'?'class="chip red"':'class="chip"')).join('')}</section>`:''}
+  <div class="found">Найдено <b>${list.length}</b> из ${L.length}${list.length?` · от <b class="num">${mln(Math.min(...list.map(f=>f.final)))}</b> до <b class="num">${mln(Math.max(...list.map(f=>f.final)))} млн ₽</b>`:''}</div>
+  ${list.length?`<section class="grid">${list.slice(0,state.shown).map(card).join('')}</section>`:`<div class="empty">Нет квартир под эти фильтры.</div>`}
+  ${list.length>state.shown?`<button class="btn btn-main more" id="more">Показать ещё ${Math.min(30,list.length-state.shown)} из ${list.length-state.shown}</button>`:''}
+  <p class="foot">Цены и наличие — с сайта moskva.brusnika.ru на ${DATE}. Перед бронью сверяйте у застройщика.</p>`;
+  app.querySelector('#sort').value=state.sort;
+  app.querySelectorAll('.chip[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k; if(k==='promo') state.promo=!state.promo; else if(k==='nobk') state.nobk=!state.nobk; else state[k]=b.dataset.v; state.shown=30; projectView(slug);});
+  app.querySelector('#sort').onchange=e=>{state.sort=e.target.value;projectView(slug)};
+  bindHead(slug);
+  const m=app.querySelector('#more'); if(m) m.onclick=()=>{const y=scrollY; state.shown+=30; projectView(slug); scrollTo(0,y)};
+}
+function planBox(f,cls){
+  return `<div class="${cls}">
+    ${f.img&&PL[f.img]?`<img src="${PL[f.img]}" alt="Планировка: ${RT(f.r)}, ${area(f.a)}" loading="lazy">`:`<div class="noplan">${f.img&&!PLDONE[f.slug]?'Загружаю планировку…':'Планировка — на сайте Брусники'}</div>`}
+    <div class="badges"><span class="bd b-dark">${RT(f.r)}</span><span class="bd b-soft">${esc(f.b)} · этаж ${f.fl}</span></div>
+    ${f.bk?`<div class="akcia bk">Бронь</div>`:f.ag?`<div class="akcia">Акция</div>`:''}
+  </div>`;
+}
+function card(f){
+  return `<article class="card${f.ag?' ag':''}${f.bk?' bkd':''}">
+    <a class="card-main" href="#kv-${f.id}">
+      ${planBox(f,'plan')}
+      <div class="body">
+        <div class="ttl"><h3>${RT(f.r)}, ${area(f.a)}</h3><span>Подробнее</span></div>
+        <div class="facts num"><div><small>Этаж</small><b>${f.fl} из ${f.ff}</b></div><div><small>Сдача</small><b>${f.d.replace(' квартал',' кв.')}</b></div><div><small>За м²</small><b>${fmt(f.ppm)}</b></div></div>
+        <div class="prices num">
+          <div class="pline"><span>Базовая цена</span><s class="black">${fmt(f.base)}</s></div>
+          <div class="pline"><span>Цена сайта со скидкой</span><b class="red">${fmt(f.site)}</b></div>
+          <div class="final"><small>${f.promo?(f.pt==='anti_auction'?'Антиаукцион, цена снижается':'Цена по акции до '+ddmm(f.pd)):'Цена сайта со скидкой'}</small><b>${fmt(f.final)}</b><span class="save">выгода ${fmt(f.save)} от базовой</span></div>
+          ${f.ag?`<div class="agent"><span>Цена со скидкой агента ${AGENT}%</span><b>${fmt(f.ag)}</b></div>`:''}
+        </div>
+      </div>
+    </a>
+    <a class="site-link" href="https://moskva.brusnika.ru/flat/${f.id}/" target="_blank" rel="noopener">Открыть на сайте ↗</a>
+  </article>`;
+}
+
+/* ---------- FLAT DETAIL ---------- */
+function termCard(c){
+  let body='';
+  if(c.rates) body=c.rates.map(r=>`<div class="rate"><span>${r[0]}</span><span class="v">${r[1]}</span></div>`).join('');
+  if(c.kv) body=`<dl class="tkv">${c.kv.map(k=>`<dt>${k[0]}</dt><dd>${k[1].replace(/(\d) (\d{3})/g,'$1 $2').replace(/ ₽/g,' ₽')}</dd>`).join('')}</dl>`;
+  if(c.split) body=`<div><div class="split">${c.split.map(s=>`<span style="width:${s[0]}%">${s[0]}%</span>`).join('')}</div><div class="split-cap">${c.split.map(s=>`<span style="width:${s[0]}%">${s[1]}</span>`).join('')}</div></div>`;
+  if(c.table) body=`<div class="tblwrap"><table><thead><tr>${c.table.head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${c.table.rows.map(r=>`<tr>${r.map((v,i)=>i?`<td class="r">${v}</td>`:`<td><b>${v}</b></td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<article class="tcard"${c.wide?' style="grid-column:1/-1"':''}><div><div class="who">${c.who}</div><h4>${c.title}</h4></div>${body}${c.warn?`<div class="warn">${c.warn}</div>`:''}</article>`;
+}
+/* ---------- расчёты по квартире ---------- */
+const CALC_FOR = f => (f.slug==='izdanie' && (f.b==='Дом 1' || f.b==='Дом 2')) || f.slug==='mons' || (f.slug==='gertzena' && f.b==='Дом 2') || f.slug==='perviy';
+const SBER={15:[11,9,7,5,3],30:[12,10,8,6,4]}, KIDS=['1 ребёнок','2 детей','3 детей','4 детей / ребёнок-инвалид','5 детей'];
+const GF={kids:1,term:30,pv:20};
+const PF={kids:2,term:30,pv:20}; const DOMRF={1:10.5,2:8.5};
+const ann=(L,ratePct,months)=>{const r=ratePct/1200; return r? L*r/(1-Math.pow(1+r,-months)) : L/months;};
+function addMonths(iso,m){const t=new Date(iso+'T12:00:00Z'); t.setUTCMonth(t.getUTCMonth()+m); return t.toISOString().slice(0,10);}
+const dmy=iso=>iso.slice(8,10)+'.'+iso.slice(5,7)+'.'+iso.slice(0,4);
+const tx=v=>fmt(v).replace(/ /g,' ');
+function calcList(f){
+  const P = f.ag || f.final, out=[];
+  // Семейная 3,9% на 15 лет, ПВ 50%, кредит до 18 млн — обе очереди
+  const famL=Math.min(P*0.5,18e6), famPV=P-famL, famM=ann(famL,3.9,180);
+  out.push({who:'Семейная ипотека · ПВ 50% · 15 лет', h:'Ставка 3,9% на 15 лет',
+    kv:[['Первый взнос',fmt(famPV)+(famL>=18e6?' (кредит ограничен 18 млн)':'')],['Сумма кредита',fmt(famL)],['Срок','15 лет (180 мес.)'],['Переплата',fmt(famM*180-famL)]],
+    big:['Ежемесячный платёж',fmt(famM)], note:'Максимальная сумма кредита — 18 млн ₽.',
+    t:`Семейная ипотека 3,9% на 15 лет, ПВ 50%: взнос ${tx(famPV)}, кредит ${tx(famL)}, платёж ${tx(famM)}/мес (кредит до 18 млн ₽).`});
+  if(f.slug==='perviy'){
+    out.length=0;
+    const aPV=P*0.201, aL=P-aPV;
+    out.push({who:'Траншевая ипотека · до 08.2027', h:'ПВ 20,1% · первый транш 10%',
+      kv:[['Первый взнос',fmt(aPV)],['Сумма кредита',fmt(aL)],['Первый транш (10% стоимости)',fmt(P*0.1)],['Срок','до 08.2027']], big:['Первый взнос',fmt(aPV)], t:''});
+    const bL=P*0.8, b1=ann(bL,12.49,360), b2=ann(bL,12.59,360);
+    out.push({who:'Субсидированная ипотека · Совкомбанк, Альфа-Банк', h:'Базовая 12,49–12,59% на весь срок',
+      kv:[['Первый взнос 20%',fmt(P*0.2)],['Сумма кредита',fmt(bL)],['Срок','30 лет (360 мес.)'],['Переплата',`${fmt(b1*360-bL)} – ${fmt(b2*360-bL)}`]],
+      big:['Ежемесячный платёж',`${fmt(b1)} – ${fmt(b2)}`], note:'Ставка на весь срок кредита. Срок 30 лет — для расчёта.', t:''});
+    const rate=DOMRF[PF.kids], L=P*(1-PF.pv/100), m=ann(L,rate,PF.term*12);
+    out.push({fam:'perviy', who:'Семейная ипотека · Дом.РФ', h:`Калькулятор: ставка ${String(rate).replace('.',',')}% на ${PF.term} лет`,
+      kv:[['Первый взнос '+PF.pv+'%',fmt(P*PF.pv/100)],['Сумма кредита',fmt(L)],['Срок',PF.term+' лет ('+PF.term*12+' мес.)'],['Переплата',fmt(m*PF.term*12-L)]],
+      big:['Ежемесячный платёж',fmt(m)], note:PF.term===15?'От акционной цены на 15 лет.':'Субсидированная семейная на весь срок, ПВ от 20%. Срок 30 лет — для расчёта.', t:''});
+    return {P,out};
+  }
+  if(f.slug==='gertzena'){
+    out.length=0;
+    const trPV=P*0.201, trL=P-trPV, [ty,tm]=AG_TODAY.split('-').map(Number), trMonths=Math.max(1,(2027-ty)*12+(8-tm)), trStd=ann(trL,18.7,360);
+    out.push({who:'Траншевая ипотека · до 08.2027', h:'ПВ 20,1% · первый транш 100 000 ₽',
+      kv:[['Первый взнос',fmt(trPV)],['Сумма кредита',fmt(trL)],['Первый транш','100 000 ₽'],['До 08.2027','1 690 ₽/мес · ≈'+trMonths+' мес.']],
+      big:['Платёж до 08.2027','1 690 ₽'], cnote:`Далее — переход на стандартную ипотеку <b>18,7%</b> (при сроке 30 лет ≈ <b>${fmt(trStd)}/мес</b>) или внесение всего остатка <b>${fmt(trL)}</b>.`, t:''});
+    const rate=SBER[GF.term][GF.kids-1], L=P*(1-GF.pv/100), m=ann(L,rate,GF.term*12);
+    out.push({fam:true, who:'Семейная ипотека · СберБанк · от акционной цены', h:`Калькулятор: ставка ${String(rate).replace('.',',')}% на ${GF.term} лет`,
+      kv:[['Первый взнос '+GF.pv+'%',fmt(P*GF.pv/100)],['Сумма кредита',fmt(L)],['Срок',GF.term+' лет ('+GF.term*12+' мес.)'],['Переплата',fmt(m*GF.term*12-L)]],
+      big:['Ежемесячный платёж',fmt(m)], note:`${KIDS[GF.kids-1]} · ставка ${rate}% на ${GF.term} лет.`, t:''});
+    return {P,out};
+  }
+  if(f.slug==='mons' || f.b==='Дом 1'){
+    const trPV=P*0.201, trL=P-trPV, [ty,tm]=AG_TODAY.split('-').map(Number), trMonths=Math.max(1,(2027-ty)*12+(8-tm)), trStd=ann(trL,18.7,360);
+    out.push({who:'Траншевая ипотека · до 08.2027', h:'ПВ 20,1% · первый транш 100 000 ₽',
+      kv:[['Первый взнос',fmt(trPV)],['Сумма кредита',fmt(trL)],['Первый транш','100 000 ₽'],['До 08.2027','1 690 ₽/мес · ≈'+trMonths+' мес.']],
+      big:['Платёж до 08.2027','1 690 ₽'], cnote:`Далее — переход на стандартную ипотеку <b>18,7%</b> (при сроке 30 лет ≈ <b>${fmt(trStd)}/мес</b>) или внесение всего остатка <b>${fmt(trL)}</b>.`,
+      t:`Траншевая ипотека до 08.2027: ПВ 20,1% — ${tx(trPV)}, первый транш 100 000 ₽, мин. платёж 1 690 ₽/мес; далее стандартная ипотека 18,7% (при сроке 30 лет ≈ ${tx(trStd)}/мес) или внесение остатка ${tx(trL)}.`});
+    const r1=P*0.4, r2=P*0.2, r3=P-r1-r2, d2=addMonths(AG_TODAY,6);
+    out.push({who:'Рассрочка · без удорожания', h:'40 / 20 / 40', split:[40,20,40],
+      kv:[['Сейчас · 40%',fmt(r1)],['Через полгода · 20%',fmt(r2)+' · ≈ '+dmy(d2)],['Июль 2027 · 40%',fmt(r3)]], big:['Итого',fmt(P)],
+      t:`Рассрочка 40/20/40: сейчас ${tx(r1)}, через полгода (≈ ${dmy(d2)}) ${tx(r2)}, в июле 2027 ${tx(r3)}.`});
+  } else {
+    const r1=P*0.4, r2=P*0.3, r3=P-r1-r2, d2=addMonths(AG_TODAY,9), d3=addMonths(AG_TODAY,18);
+    out.push({who:'Рассрочка · без удорожания', h:'40 / 30 / 30', split:[40,30,30],
+      kv:[['Сейчас · 40%',fmt(r1)],['Через 9 мес. · 30%',fmt(r2)+' · ≈ '+dmy(d2)],['Ещё через 9 мес. · 30%',fmt(r3)+' · ≈ '+dmy(d3)]], big:['Итого',fmt(P)],
+      t:`Рассрочка 40/30/30: сейчас ${tx(r1)}, через 9 месяцев (≈ ${dmy(d2)}) ${tx(r2)}, ещё через 9 месяцев (≈ ${dmy(d3)}) ${tx(r3)}.`});
+    const R0=P*0.5, p1=R0*0.01, R24=R0*Math.pow(0.99,24);
+    out.push({who:'Рассрочка · без удорожания', h:'50% + 1% на 2 года',
+      kv:[['ПВ 50%',fmt(P*0.5)],['Остаток',fmt(R0)],['Ежемесячно','1% от остатка'],['Срок','2 года (24 мес.)']],
+      big:['Первый ежемесячный платёж',fmt(p1)], cnote:`Платёж каждый месяц — 1% от текущего остатка, поэтому немного уменьшается. Через 2 года вносится оставшаяся сумма ≈ <b>${fmt(R24)}</b>.`,
+      t:`Рассрочка 50% + 1%: ПВ ${tx(P*0.5)}, ежемесячно 1% от остатка (первый платёж ${tx(p1)}), через 2 года — оставшаяся сумма ≈ ${tx(R24)}.`});
+    const aPV=P*0.201, aL=P-aPV;
+    out.push({who:'Траншевая ипотека · 3 года · вариант 1', h:'ПВ 20,1% · первый транш 10%',
+      kv:[['Первый взнос',fmt(aPV)],['Сумма кредита',fmt(aL)],['Первый транш (10% стоимости)',fmt(P*0.1)],['Срок','3 года']], big:['Первый взнос',fmt(aPV)],
+      t:`Траншевая ипотека на 3 года, вариант 1: ПВ 20,1% — ${tx(aPV)}, кредит ${tx(aL)}, первый транш 10% стоимости — ${tx(P*0.1)}.`});
+    const bPV=P*0.301, bL=P-bPV;
+    out.push({who:'Траншевая ипотека · 3 года · вариант 2', h:'ПВ 30,1% · первый транш 100 000 ₽',
+      kv:[['Первый взнос',fmt(bPV)],['Сумма кредита',fmt(bL)],['Первый транш','100 000 ₽'],['Срок','3 года']], big:['Мин. платёж','1 690 ₽'],
+      t:`Траншевая ипотека на 3 года, вариант 2: ПВ 30,1% — ${tx(bPV)}, кредит ${tx(bL)}, первый транш 100 000 ₽, мин. платёж 1 690 ₽/мес.`});
+  }
+  out.sort((x,y)=>(y.who.startsWith('Траншевая')?1:0)-(x.who.startsWith('Траншевая')?1:0));
+  return {P,out};
+}
+function calcHtml(f,stat){
+  const {P,out}=calcList(f);
+  const famCtlP=()=>stat?'':`<div class="fctl"><span class="lbl2">Дети в семье</span><div class="seg">${[1,2].map(k=>`<button type="button" data-pk="${k}" aria-pressed="${PF.kids===k}">${k===1?'1 ребёнок':'2 детей'}</button>`).join('')}</div>
+      <span class="lbl2">Программа</span><div class="seg">${[[30,'Субсидированная · весь срок'],[15,'От акционной цены · 15 лет']].map(([t,l])=>`<button type="button" data-pt="${t}" aria-pressed="${PF.term===t}">${l}</button>`).join('')}</div>
+      <label for="pf-pv">Первый взнос, %</label><div class="pvrow"><input id="pf-pv" type="range" min="20" max="90" step="1" value="${PF.pv}"><b id="pf-pvv">${PF.pv}%</b></div></div>`;
+  const famCtl=()=>stat?'':`<div class="fctl"><label for="gf-kids">Дети в семье</label><select id="gf-kids" class="sel">${KIDS.map((k,i)=>`<option value="${i+1}"${GF.kids===i+1?' selected':''}>${k}</option>`).join('')}</select>
+      <span class="lbl2">Срок</span><div class="seg">${[15,30].map(t=>`<button type="button" data-gt="${t}" aria-pressed="${GF.term===t}">${t} лет</button>`).join('')}</div>
+      <label for="gf-pv">Первый взнос, %</label><div class="pvrow"><input id="gf-pv" type="range" min="20" max="90" step="1" value="${GF.pv}"><b id="gf-pvv">${GF.pv}%</b></div></div>`;
+  return `<div class="cbase">Расчёт от цены ${f.ag?`со скидкой агента ${AGS}%`:'сайта со скидкой'}: <b>${fmt(P)}</b></div>
+  <div class="calcs num">${out.map(c=>`<article class="calc${c.fam?' fam':''}"><div class="who">${c.who}</div><h4>${c.h}</h4>${c.fam==='perviy'?famCtlP():c.fam?famCtl():''}
+    ${c.split?`<div class="split">${c.split.map(x=>`<span style="width:${x}%">${x}%</span>`).join('')}</div>`:''}
+    <dl class="tkv">${c.kv.map(k=>`<dt>${k[0]}</dt><dd>${k[1]}</dd>`).join('')}</dl>
+    <div class="cbig"><small>${c.big[0]}</small><b>${c.big[1]}</b></div>
+    ${c.cnote?`<div class="cnote">${c.cnote}</div>`:''}${c.note?`<span class="fine">${c.note}</span>`:''}</article>`).join('')}</div>
+  <p class="disclaim">Расчёты ориентировочные. Точную информацию агент направит после встречи в офисе продаж.</p>`;
+}
+function calcText(f){
+  const {P,out}=calcList(f);
+  return `\n\nРасчёт от цены ${f.ag?'со скидкой агента '+AGS+'%':'сайта со скидкой'} ${tx(P)}:\n`+out.map(c=>'— '+c.t).join('\n')+'\n\nРасчёты ориентировочные. Точную информацию агент направит после встречи в офисе продаж.';
+}
+function copyText(f,p){
+  return `${p.name} (${p.place}), ${f.b}, секция ${f.s}
+${RT(f.r)}, ${String(f.a).replace('.',',')} м², ${f.fl} этаж из ${f.ff}, сдача ${f.d}
+
+Базовая цена: ${fmt(f.base)}
+Цена сайта со скидкой: ${fmt(f.site)}${f.promo?`\n${f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd)}: ${fmt(f.promo)}`:''}
+Выгода от базовой цены: ${fmt(f.save)}${f.ag?`\nЦена со скидкой агента ${AGENT}%: ${fmt(f.ag)}`:''}
+
+Все формы оплаты Брусники без удорожания, от скидочной цены сайта.
+Квартира на сайте: https://moskva.brusnika.ru/flat/${f.id}/${CALC_FOR(f)?calcText(f):''}`.replace(/ /g,' ');
+}
+/* ---------- PDF ---------- */
+const LIB_H2C='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+const LIB_PDF='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+const loadScript=src=>new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`)&&(src===LIB_H2C?window.html2canvas:window.jspdf)) return res(); const sc=document.createElement('script'); sc.src=src; sc.onload=res; sc.onerror=()=>rej(new Error('script')); document.head.appendChild(sc);});
+let DLP=null; const getDL=()=>DLP||(DLP=(async()=>{try{return window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){return null}})());
+const waitImgs=el=>Promise.all([...el.querySelectorAll('img')].map(im=>im.complete&&im.naturalWidth?0:new Promise(r=>{im.onload=im.onerror=r;})));
+function pdfHtml(f){
+  const p=BY_ID[f.c], M=PMETA[p.slug]||{ph:[]}, photo=M.ph[1]||M.ph[0];
+  const pr=(l,v,c='')=>`<div class="pr ${c}"><span>${l}</span><b>${v}</b></div>`;
+  return `<div class="pdfdoc">
+    <div class="pd-top"><img src="prostor-logo.webp" alt="" class="pd-logo"><div class="pd-date">Расчёт по квартире<br>${dmy(AG_TODAY)}</div></div>
+    <div class="pd-proj">${photo?`<img src="${photo}" alt="">`:''}<div><div class="pd-eye">${esc(p.place)}</div><div class="pd-pn">${esc(p.name)}</div>
+      <div class="pd-sub">${p.metro.map(m=>m[0]).join(', ')} · ${esc(f.b)}, секция ${esc(f.s)} · сдача ${esc(f.d)}</div></div></div>
+    <div class="pd-flat"><div class="pd-plan">${f.img&&PL[f.img]?`<img src="${PL[f.img]}" alt="">`:'<span>Планировка — на сайте застройщика</span>'}</div>
+      <div class="pd-info"><div class="pd-ft">${RT(f.r)}, ${area(f.a)}</div>
+        <div class="pd-kv"><div><small>Этаж</small><b>${f.fl} из ${f.ff}</b></div><div><small>Площадь</small><b>${area(f.a)}</b></div><div><small>За м²</small><b>${fmt(Math.round((f.ag||f.final)/f.a))}</b></div></div>
+        <div class="pd-prices">${pr('Базовая цена',`<s>${fmt(f.base)}</s>`)}${pr('Цена сайта со скидкой',fmt(f.site),'red')}${f.promo?pr(f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd),fmt(f.promo)):''}
+          ${f.ag?pr(`Цена со скидкой агента ${AGS}%`,fmt(f.ag),'ag'):pr('Итоговая цена',fmt(f.final),'fin')}</div>
+        ${f.bk?'<div class="warn">Квартира забронирована на сайте застройщика.</div>':''}</div></div>
+    ${CALC_FOR(f)?`<div class="pd-h">Расчёты</div>${calcHtml(f,true)}`:''}
+    <p class="disclaim" style="font-size:12px">Цены с сайта застройщика на ${DATE}. Все формы оплаты без удорожания, от скидочной цены сайта.</p>
+  </div>`;
+}
+async function savePdf(f,btn,msg){
+  const say=t=>{msg.textContent=t;};
+  btn.disabled=true; say('Готовлю PDF…');
+  let host;
+  try{
+    const dlp=getDL();
+    await Promise.all([loadScript(LIB_H2C),loadScript(LIB_PDF),f.img&&!PL[f.img]?loadPlans(BY_ID[f.c].slug):0]);
+    host=document.createElement('div'); host.className='pdfhost'; host.innerHTML=pdfHtml(f); document.body.appendChild(host);
+    await waitImgs(host); if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+    const node=host.firstElementChild;
+    const canvas=await window.html2canvas(node,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false});
+    const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'pt',format:'a4'}); const W=pdf.internal.pageSize.getWidth(), H=pdf.internal.pageSize.getHeight();
+    const pxPerPage=Math.floor(canvas.width*H/W);
+    if(canvas.height<=pxPerPage*1.3){ const k=Math.min(1,pxPerPage/canvas.height), w=W*k; pdf.addImage(canvas.toDataURL('image/jpeg',0.9),'JPEG',(W-w)/2,0,w,canvas.height*w/canvas.width); }
+    else
+    for(let y=0,pg=0;y<canvas.height;y+=pxPerPage,pg++){
+      const h=Math.min(pxPerPage,canvas.height-y); const c=document.createElement('canvas'); c.width=canvas.width; c.height=h;
+      const cx=c.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,h); cx.drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);
+      if(pg) pdf.addPage(); pdf.addImage(c.toDataURL('image/jpeg',0.9),'JPEG',0,0,W,h*W/canvas.width);
+    }
+    const blob=pdf.output('blob'); const p=BY_ID[f.c];
+    const name=`Расчёт ${p.name.replace(/[«»"]/g,'')} ${RT(f.r)} ${String(f.a).replace('.',',')} м2 ${f.b} эт ${f.fl}.pdf`;
+    const dl=await dlp;
+    if(!dl){ const u=URL.createObjectURL(blob), ln=document.createElement('a'); ln.href=u; ln.download=name; document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(()=>URL.revokeObjectURL(u),10000); say('PDF сохранён'); return; }
+    await dl.save({filename:name,data:blob}); say('PDF сохранён');
+  }catch(e){
+    const c=e&&e.code;
+    say(c==='declined'?'Сохранение отменено':c==='rate_limited'?'Подождите пару секунд и нажмите ещё раз':c==='host_unavailable'?'В этом приложении нельзя сохранять файлы — откройте сайт в браузере':e&&e.message==='script'?'Не удалось загрузить модуль PDF — проверьте интернет':'Не удалось сохранить PDF');
+  }finally{ if(host) host.remove(); btn.disabled=false; }
+}
+function bindFam(f){
+  const box=document.getElementById('calcbox'); if(!box) return;
+  const redraw=keep=>{box.innerHTML=calcHtml(f); bindFam(f); if(keep){const el=document.getElementById(keep); if(el) el.focus();}};
+  const k=document.getElementById('gf-kids'); if(k) k.onchange=()=>{GF.kids=+k.value; redraw('gf-kids');};
+  box.querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{PF.kids=+b.dataset.pk; redraw();});
+  box.querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>{PF.term=+b.dataset.pt; redraw();});
+  const pr=document.getElementById('pf-pv'); if(pr){ pr.oninput=()=>{document.getElementById('pf-pvv').textContent=pr.value+'%';}; pr.onchange=()=>{PF.pv=+pr.value; redraw('pf-pv');}; }
+  box.querySelectorAll('[data-gt]').forEach(b=>b.onclick=()=>{GF.term=+b.dataset.gt; redraw();});
+  const r=document.getElementById('gf-pv'); if(r){ r.oninput=()=>{document.getElementById('gf-pvv').textContent=r.value+'%';}; r.onchange=()=>{GF.pv=+r.value; redraw('gf-pv');}; }
+}
+function detail(f){
+  const p=BY_ID[f.c];
+  const tc=[]; T.forEach(s=>s.cards.forEach(c=>{if(appliesTo(c,p.slug,f.b)) tc.push([s.sec,c])}));
+  document.title=`${RT(f.r)}, ${f.a} м² · ${p.name}`;
+  app.innerHTML=`
+  <div class="back-row"><a class="pill" href="#p-${p.slug}">‹ Все квартиры ${esc(p.name)}</a><a class="pill" href="https://moskva.brusnika.ru/flat/${f.id}/" target="_blank" rel="noopener">Квартира на сайте Брусники ↗</a></div>
+  <section class="detail">
+    <div class="panel">${planBox(f,'dplan')}</div>
+    <div class="panel">
+      <span class="eyebrow">${esc(p.name)} · ${esc(f.b)}, секция ${esc(f.s)}</span>
+      <h1>${RT(f.r)}, ${area(f.a)}</h1>
+      ${f.bk?`<div class="warn" style="font-size:15px">Квартира забронирована на сайте застройщика. Уточните статус перед показом клиенту.</div>`:''}
+      <div class="kv num">
+        <div><small>Этаж</small><b>${f.fl} из ${f.ff}</b></div><div><small>Срок сдачи</small><b>${f.d}</b></div><div><small>За м²</small><b>${fmt(f.ppm)}</b></div>
+        <div><small>Дом</small><b>${esc(f.b)}</b></div><div><small>Секция</small><b>${esc(f.s)}</b></div><div><small>ID на сайте</small><b>${f.id}</b></div>
+      </div>
+      ${f.tags.length?`<div class="chips">${f.tags.map(t=>`<span class="tg g">${esc(t)}</span>`).join('')}</div>`:''}
+      <div class="pbox num">
+        <div class="pline"><span>Базовая цена сайта</span><s class="black">${fmt(f.base)}</s></div>
+        <div class="pline"><span>Цена сайта со скидкой</span><b class="red">${fmt(f.site)}</b></div>
+        ${f.promo?`<div class="pline"><span>${f.pt==='anti_auction'?'Антиаукцион (цена снижается)':'Акция сайта до '+ddmm(f.pd)}</span><b class="black">−${fmt(f.site-f.promo)}</b></div>`:''}
+        <div class="bigfinal"><small>${f.promo?'Цена с акцией':'Цена со скидкой сайта'}</small><b>${fmt(f.final)}</b><span class="save">выгода ${fmt(f.save)} (−${f.pct}%) от базовой цены</span></div>
+        ${f.ag?`<div class="agent big"><span>Цена со скидкой агента ${AGENT}% <small>−${fmt(f.final-f.ag)}</small></span><b>${fmt(f.ag)}</b></div>`:`<div class="fine">Скидка агента ${AGS}% на эту квартиру не распространяется.</div>`}
+      </div>
+    </div>
+    <div class="panel full">
+      <div class="calchead"><h3>Расчёты по квартире</h3><div class="pdfrow"><button type="button" class="btn btn-main" id="pdfbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>Сохранить расчёт в PDF</button><span class="pdfmsg" id="pdfmsg" role="status"></span></div></div>
+      ${CALC_FOR(f)?`<div id="calcbox">${calcHtml(f)}</div>`:`<div class="soon">Расчёты для этой квартиры пока не заданы. Сейчас они есть для квартир Издания, МОНС, Герцена (дом 2) и Первого квартала.</div>`}
+    </div>
+    <div class="panel full">
+      <h3>Условия реализации для этой квартиры</h3>
+      ${tc.length?`<div class="cards">${tc.map(([s,c])=>termCard(Object.assign({},c,{who:s+' · '+c.who}))).join('')}</div>`:`<p class="intro">Для этого проекта условия ещё не внесены.</p>`}
+      <div class="note"><b>Индивидуально</b> можно попробовать согласовать отложенный ПВ до 45 дней. Все условия без удорожания, от скидочной цены сайта.</div>
+    </div>
+  </section>`;
+  const pb=app.querySelector('#pdfbtn'); if(pb) pb.onclick=()=>savePdf(f,pb,app.querySelector('#pdfmsg'));
+  if((f.slug==='gertzena'||f.slug==='perviy')&&CALC_FOR(f)) bindFam(f);
+}
+
+/* ---------- TERMS ---------- */
+let tfilter='all';
+function terms(){
+  const opts=[['all','Все проекты'],...PROJ.filter(p=>p.slug!=='dom-a'&&p.slug!=='metronom').map(p=>[p.slug,p.name.replace(/Квартал |[«»]/g,'')])];
+  const secs=T.map((s,i)=>({...s,i,cs:s.cards.filter(c=>tfilter==='all'||c.p.includes(tfilter))}));
+  const tcls=['t-sky','t-peach','t-lav','t-mint'];
+  const block=s=>{
+    if(!s.cs.length) return '';
+    let inner;
+    if(s.cs.some(c=>c.grp)){
+      const g=[...new Set(s.cs.map(c=>c.grp))];
+      inner=g.map(n=>`<div class="grp"><h3>${n}</h3><div class="cards">${s.cs.filter(c=>c.grp===n).map(termCard).join('')}</div></div>`).join('');
+    } else inner=`<div class="cards">${s.cs.map(termCard).join('')}</div>`;
+    return `<section class="panel block" id="blk-${s.i}"><div class="blkhead"><span class="blknum">${s.cs.length}</span><div><h2>${s.sec}</h2><span class="fine">${s.sub}</span></div><span class="blkhi">${s.hi}</span></div>${inner}</section>`;
+  };
+  app.innerHTML=`
+  <section class="hero">
+    <div class="hero-main">
+      <span class="eyebrow">Брусника · формы оплаты</span>
+      <h1>Условия реализации без удорожания</h1>
+      <p class="terms-line" style="font-size:18px">От скидочной цены сайта ❗️</p>
+      <p>Четыре блока условий. Нажмите на блок, чтобы перейти к нему, или выберите проект, чтобы оставить только его программы.</p>
+      <div class="hero-note"><b>Индивидуально</b> можно попробовать согласовать отложенный ПВ до 45 дней.</div>
+    </div>
+    <div class="tiles">${secs.map((s,k)=>`<button class="tile ${tcls[k]} blkjump" data-blk="${s.i}" ${s.cs.length?'':'disabled'} style="grid-column:span 3;border:0;text-align:left;${s.cs.length?'':'opacity:.45'}"><b style="font-size:26px">${s.hi}</b><span><b style="font-size:15px;font-family:var(--text)">${s.sec}</b><br>${s.cs.length} ${s.cs.length===1?'программа':s.cs.length<5?'программы':'программ'}</span></button>`).join('')}</div>
+  </section>
+  <div class="agent big" style="flex-wrap:wrap"><span>Скидка агента ${AGS}%${AG_WHEN}<small>${AG_RULE} Не действует на рассрочки с пометкой «Не работает акция».</small></span><b>−${AGS}%</b></div>
+  <section class="panel"><h3>График скидки агента</h3><div class="tblwrap"><table class="sched"><thead><tr><th>Период</th><th>Скидка агента</th></tr></thead><tbody>
+  ${AG_SCHED.map(([d,pc],k)=>{const nx=AG_SCHED[k+1]; const cur=AG_TODAY>=d&&(!nx||AG_TODAY<nx[0]); return `<tr class="${cur?'cur':''}"><td>${nx?dm(d)+' – '+dm(prevDay(nx[0])):'с '+dm(d)}${cur?' <b class="nowtag">сейчас</b>':''}</td><td class="r">${String(pc).replace('.',',')}%</td></tr>`}).join('')}
+  </tbody></table></div><span class="fine">Скидка пересчитывается автоматически по дате (московское время).</span></section>
+  <section class="filters">${opts.map(([v,n])=>`<button class="chip" data-t="${v}" aria-pressed="${tfilter===v}">${n}</button>`).join('')}</section>
+  ${secs.map(block).join('')}
+  <div class="note"><b>Индивидуально</b> можно попробовать согласовать отложенный первоначальный взнос до 45 дней.</div>`;
+  app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tfilter=b.dataset.t;terms()});
+  app.querySelectorAll('.blkjump').forEach(b=>b.onclick=()=>{const el=document.getElementById('blk-'+b.dataset.blk); if(el) el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})});
+}
+
+/* ---------- routing ---------- */
+document.addEventListener('click',e=>{
+  const hm=e.target.closest('a[href="#home"]'); if(hm){e.preventDefault(); const lw=document.getElementById('lwrap'); if(lw&&lw.classList.contains('on')) document.getElementById('lfull').click(); if(location.hash==='#home'||location.hash===''){render(); scrollTo(0,0);} else location.hash='home'; return;}
+  const tf=e.target.closest('[data-tf]'); if(tf){tfilter=tf.dataset.tf; if(location.hash==='#terms') terms(); else location.hash='terms'; return;}
+  const s=e.target.closest('[data-sel]'); if(s){selectProj(s.dataset.sel);}
+});
+const scrolls={};
+let lastRoute='';
+function render(keep){
+  const h=location.hash.slice(1)||'home';
+  if(keep){ const kv=h.match(/^kv-(\d+)$/), pr=h.match(/^p-([a-z-]+)$/); if(kv){const f=FL.find(x=>x.id===+kv[1]); if(f) detail(f);} else if(pr && BY_SLUG[pr[1]]) projectView(pr[1]); return; }
+  scrolls[lastRoute]=scrollY;
+  let route='home';
+  const kv=h.match(/^kv-(\d+)$/), pr=h.match(/^p-([a-z-]+)$/);
+  if(kv){const f=FL.find(x=>x.id===+kv[1]); if(f){route='p-'+f.slug; loadPlans(f.slug); detail(f); nav(route); lastRoute=h; scrollTo(0,0); return;}}
+  document.title='Брусника для агентов';
+  if(pr && BY_SLUG[pr[1]] && !BY_SLUG[pr[1]].off){route=h; projectView(pr[1]); loadPlans(pr[1]);}
+  else if(h==='terms'){route='terms'; terms();}
+  else home();
+  nav(route);
+  scrollTo(0, lastRoute.startsWith('kv-') && scrolls[h]!=null ? scrolls[h] : 0);
+  lastRoute=h;
+}
+fetch('flats.json').then(r=>r.json()).then(d=>{const arr=Array.isArray(d)?d:d.flats; if(!Array.isArray(d)&&d.date) DATE=d.date; FL=arr.map(prep); render(); addEventListener('hashchange',render);})
+ .catch(()=>{app.innerHTML='<div class="empty">Не удалось загрузить список квартир. Обновите страницу.</div>'});
+</script>
+
+</body>
+</html>
