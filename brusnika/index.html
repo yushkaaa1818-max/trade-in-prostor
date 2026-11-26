@@ -708,7 +708,7 @@ function home(){
       <h1>Что обязательно нужно продавать и покупать</h1>
       <p class="terms-line">Все формы оплаты без удорожания, от скидочной цены сайта</p>
       ${AGENT>0?`<div class="hero-note" style="background:var(--agent-soft)"><b style="color:var(--red)">Скидка агента ${AGS}%</b>${AG_WHEN} — ${AG_RULE.charAt(0).toLowerCase()+AG_RULE.slice(1)} Карточки квартир со скидкой обведены красной рамкой.</div>`:`<div class="hero-note"><b>Скидка агента</b> действовала до 19.12 и сейчас не начисляется.</div>`}
-      <div class="hero-note" style="margin-top:0"><b>Как читать цены:</b> чёрная зачёркнутая — базовая цена сайта, красная — цена сайта со скидкой, крупная — цена с действующей акцией сайта (если акции нет, совпадает с красной).</div>
+      <div class="hero-note" style="margin-top:0"><b>Как читать цены:</b> зачёркнутая — базовая цена сайта, крупная — актуальная цена на сайте (с акцией, если она есть), красная плашка — цена со скидкой агента.</div>
     </div>
     <div class="tiles">
       <div class="tile t-blue"><b>${all.n}</b><span>квартир в продаже в ${PROJ.length} ЖК</span></div>
@@ -900,8 +900,7 @@ function card(f){
         <div class="facts num"><div><small>Этаж</small><b>${f.fl} из ${f.ff}</b></div><div><small>Сдача</small><b>${f.d.replace(' квартал',' кв.')}</b></div><div><small>За м²</small><b>${fmt(f.ppm)}</b></div></div>
         <div class="prices num">
           <div class="pline"><span>Базовая цена</span><s class="black">${fmt(f.base)}</s></div>
-          <div class="pline"><span>Цена сайта со скидкой</span><b class="red">${fmt(f.site)}</b></div>
-          <div class="final"><small>${f.promo?(f.pt==='anti_auction'?'Антиаукцион, цена снижается':'Цена по акции до '+ddmm(f.pd)):'Цена сайта со скидкой'}</small><b>${fmt(f.final)}</b><span class="save">выгода ${fmt(f.save)} от базовой</span></div>
+          <div class="final"><small>${f.promo?(f.pt==='anti_auction'?'Антиаукцион, цена снижается':'Цена по акции до '+ddmm(f.pd)):'Цена на сайте'}</small><b>${fmt(f.final)}</b><span class="save">выгода ${fmt(f.save)} от базовой</span></div>
           ${f.ag?`<div class="agent"><span>Цена со скидкой агента ${AGENT}%</span><b>${fmt(f.ag)}</b></div>`:''}
         </div>
       </div>
@@ -1003,7 +1002,7 @@ function calcHtml(f,stat){
   const famCtl=()=>stat?'':`<div class="fctl"><label for="gf-kids">Дети в семье</label><select id="gf-kids" class="sel">${KIDS.map((k,i)=>`<option value="${i+1}"${GF.kids===i+1?' selected':''}>${k}</option>`).join('')}</select>
       <span class="lbl2">Срок</span><div class="seg">${[15,30].map(t=>`<button type="button" data-gt="${t}" aria-pressed="${GF.term===t}">${t} лет</button>`).join('')}</div>
       <label for="gf-pv">Первый взнос, %</label><div class="pvrow"><input id="gf-pv" type="range" min="20" max="90" step="1" value="${GF.pv}"><b id="gf-pvv">${GF.pv}%</b></div></div>`;
-  return `<div class="cbase">Расчёт от цены ${f.ag?`со скидкой агента ${AGS}%`:'сайта со скидкой'}: <b>${fmt(P)}</b></div>
+  return `<div class="cbase">Расчёт от цены ${f.ag?`со скидкой агента ${AGS}%`:'сайта'}: <b>${fmt(P)}</b></div>
   <div class="calcs num">${out.map(c=>`<article class="calc${c.fam?' fam':''}"><div class="who">${c.who}</div><h4>${c.h}</h4>${c.fam==='perviy'?famCtlP():c.fam?famCtl():''}
     ${c.split?`<div class="split">${c.split.map(x=>`<span style="width:${x}%">${x}%</span>`).join('')}</div>`:''}
     <dl class="tkv">${c.kv.map(k=>`<dt>${k[0]}</dt><dd>${k[1]}</dd>`).join('')}</dl>
@@ -1013,14 +1012,14 @@ function calcHtml(f,stat){
 }
 function calcText(f){
   const {P,out}=calcList(f);
-  return `\n\nРасчёт от цены ${f.ag?'со скидкой агента '+AGS+'%':'сайта со скидкой'} ${tx(P)}:\n`+out.map(c=>'— '+c.t).join('\n')+'\n\nРасчёты ориентировочные. Точную информацию агент направит после встречи в офисе продаж.';
+  return `\n\nРасчёт от цены ${f.ag?'со скидкой агента '+AGS+'%':'сайта'} ${tx(P)}:\n`+out.map(c=>'— '+c.t).join('\n')+'\n\nРасчёты ориентировочные. Точную информацию агент направит после встречи в офисе продаж.';
 }
 function copyText(f,p){
   return `${p.name} (${p.place}), ${f.b}, секция ${f.s}
 ${RT(f.r)}, ${String(f.a).replace('.',',')} м², ${f.fl} этаж из ${f.ff}, сдача ${f.d}
 
 Базовая цена: ${fmt(f.base)}
-Цена сайта со скидкой: ${fmt(f.site)}${f.promo?`\n${f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd)}: ${fmt(f.promo)}`:''}
+Цена со скидкой сайта: ${fmt(f.site)}${f.promo?`\n${f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd)}: ${fmt(f.promo)}`:''}
 Выгода от базовой цены: ${fmt(f.save)}${f.ag?`\nЦена со скидкой агента ${AGENT}%: ${fmt(f.ag)}`:''}
 
 Все формы оплаты Брусники без удорожания, от скидочной цены сайта.
@@ -1042,7 +1041,7 @@ function pdfHtml(f){
     <div class="pd-flat"><div class="pd-plan">${f.img&&PL[f.img]?`<img src="${PL[f.img]}" alt="">`:'<span>Планировка — на сайте застройщика</span>'}</div>
       <div class="pd-info"><div class="pd-ft">${RT(f.r)}, ${area(f.a)}</div>
         <div class="pd-kv"><div><small>Этаж</small><b>${f.fl} из ${f.ff}</b></div><div><small>Площадь</small><b>${area(f.a)}</b></div><div><small>За м²</small><b>${fmt(Math.round((f.ag||f.final)/f.a))}</b></div></div>
-        <div class="pd-prices">${pr('Стоимость брони (срок 10 дней)',fmt(BOOK(p.slug)))}${pr('Базовая цена',`<s>${fmt(f.base)}</s>`)}${pr('Цена сайта со скидкой',fmt(f.site),'red')}${f.promo?pr(f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd),fmt(f.promo)):''}
+        <div class="pd-prices">${pr('Стоимость брони (срок 10 дней)',fmt(BOOK(p.slug)))}${pr('Базовая цена',`<s>${fmt(f.base)}</s>`)}${f.promo?pr(f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd),fmt(f.promo)):''}
           ${f.ag?pr(`Цена со скидкой агента ${AGS}%`,fmt(f.ag),'ag'):pr('Итоговая цена',fmt(f.final),'fin')}</div>
         ${f.bk?'<div class="warn">Квартира забронирована на сайте застройщика.</div>':''}</div></div>
     ${CALC_FOR(f)?`<div class="pd-h">Расчёты</div>${calcHtml(f,true)}`:''}
@@ -1109,7 +1108,6 @@ function detail(f){
       <div class="pbox num">
         <div class="pline book"><span>Стоимость брони · срок 10 дней</span><b>${fmt(BOOK(p.slug))}</b></div>
         <div class="pline"><span>Базовая цена сайта</span><s class="black">${fmt(f.base)}</s></div>
-        <div class="pline"><span>Цена сайта со скидкой</span><b class="red">${fmt(f.site)}</b></div>
         ${f.promo?`<div class="pline"><span>${f.pt==='anti_auction'?'Антиаукцион (цена снижается)':'Акция сайта до '+ddmm(f.pd)}</span><b class="black">−${fmt(f.site-f.promo)}</b></div>`:''}
         <div class="bigfinal"><small>${f.promo?'Цена с акцией':'Цена со скидкой сайта'}</small><b>${fmt(f.final)}</b><span class="save">выгода ${fmt(f.save)} (−${f.pct}%) от базовой цены</span></div>
         ${f.ag?`<div class="agent big"><span>Цена со скидкой агента ${AGENT}% <small>−${fmt(f.final-f.ag)}</small></span><b>${fmt(f.ag)}</b></div>`:`<div class="fine">Скидка агента ${AGS}% на эту квартиру не распространяется.</div>`}
