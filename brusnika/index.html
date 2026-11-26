@@ -1124,13 +1124,15 @@ document.addEventListener('click',e=>{
 });
 const scrolls={};
 let lastRoute='';
+const toTop=()=>{scrollTo(0,0); requestAnimationFrame(()=>scrollTo(0,0)); setTimeout(()=>scrollTo(0,0),60);};
+try{history.scrollRestoration='manual'}catch(e){}
 function render(keep){
   const h=location.hash.slice(1)||'home';
   if(keep){ const kv=h.match(/^kv-(\d+)$/), pr=h.match(/^p-([a-z-]+)$/); if(kv){const f=FL.find(x=>x.id===+kv[1]); if(f) detail(f);} else if(pr && BY_SLUG[pr[1]]) projectView(pr[1]); return; }
   scrolls[lastRoute]=scrollY;
   let route='home';
   const kv=h.match(/^kv-(\d+)$/), pr=h.match(/^p-([a-z-]+)$/);
-  if(kv){const f=FL.find(x=>x.id===+kv[1]); if(f){route='p-'+f.slug; loadPlans(f.slug); detail(f); nav(route); lastRoute=h; scrollTo(0,0); return;}}
+  if(kv){const f=FL.find(x=>x.id===+kv[1]); if(f){route='p-'+f.slug; loadPlans(f.slug); detail(f); nav(route); lastRoute=h; toTop(); return;}}
   document.title='Брусника для агентов';
   if(pr && BY_SLUG[pr[1]] && !BY_SLUG[pr[1]].off){route=h; projectView(pr[1]); loadPlans(pr[1]);}
   else if(h==='terms'){route='terms'; terms();}
@@ -1139,7 +1141,7 @@ function render(keep){
   scrollTo(0, lastRoute.startsWith('kv-') && scrolls[h]!=null ? scrolls[h] : 0);
   lastRoute=h;
 }
-fetch('flats.json').then(r=>r.json()).then(d=>{const arr=Array.isArray(d)?d:d.flats; if(!Array.isArray(d)&&d.date) DATE=d.date; FL=arr.map(prep); PROJ.forEach(p=>loadPlans(p.slug)); render(); addEventListener('hashchange',render);})
+fetch('flats.json').then(r=>r.json()).then(d=>{const arr=Array.isArray(d)?d:d.flats; if(!Array.isArray(d)&&d.date) DATE=d.date; FL=arr.map(prep); PROJ.forEach(p=>loadPlans(p.slug)); render(); addEventListener('hashchange',()=>render());})
  .catch(()=>{app.innerHTML='<div class="empty">Не удалось загрузить список квартир. Обновите страницу.</div>'});
 </script>
 
