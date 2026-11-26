@@ -594,6 +594,13 @@ const COMMON=`<section class="panel"><h3>Общие контакты Брусн�
   <div><small>Актирование и выплаты</small><span class="sel-t">oplatamsk@brusnika.ru</span></div>
   <div><small>Отдел партнёрских продаж</small><b>Храмов Михаил</b><a class="num" href="tel:+79250704840">+7 925 070-48-40</a><b>Сало Антон</b><a class="num" href="tel:+79659759883">+7 965 975-98-83</a><span class="sel-t">partnermsk@brusnika.ru</span><span>Telegram-канал: @brusnikamscw</span></div>
 </div></section>`;
+/* ---------- Статистика (Яндекс Метрика) ----------
+   Впишите номер счётчика вместо 0 — после этого начнут считаться визиты и скачивания PDF (цель «pdf»). */
+const YM_ID = 0;
+if(YM_ID){ (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();
+  k=e.createElement(t);a=e.getElementsByTagName(t)[0];k.async=1;k.src=r;a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+  ym(YM_ID,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,trackHash:true}); }
+const track=(goal,params)=>{ try{ if(YM_ID&&window.ym) ym(YM_ID,'reachGoal',goal,params||{}); }catch(e){} };
 const BOOK = slug => (slug==='mons'||slug==='izdanie') ? 50000 : 30000;
 const AGENT=(()=>{let v=3; for(const [d,pc] of AG_SCHED) if(AG_TODAY>=d) v=pc; return v;})();
 const AGS=String(AGENT).replace('.',',');
@@ -1079,8 +1086,8 @@ async function savePdf(f,btn,msg){
     const blob=pdf.output('blob'); const p=BY_ID[f.c];
     const name=`Расчёт ${p.name.replace(/[«»"]/g,'')} ${RT(f.r)} ${String(f.a).replace('.',',')} м2 ${f.b} эт ${f.fl}.pdf`;
     const dl=await dlp;
-    if(!dl){ const u=URL.createObjectURL(blob), ln=document.createElement('a'); ln.href=u; ln.download=name; document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(()=>URL.revokeObjectURL(u),10000); say('PDF сохранён'); return; }
-    await dl.save({filename:name,data:blob}); say('PDF сохранён');
+    if(!dl){ const u=URL.createObjectURL(blob), ln=document.createElement('a'); ln.href=u; ln.download=name; document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(()=>URL.revokeObjectURL(u),10000); say('PDF сохранён'); track('pdf',{jk:BY_ID[f.c].name}); return; }
+    await dl.save({filename:name,data:blob}); say('PDF сохранён'); track('pdf',{jk:BY_ID[f.c].name});
   }catch(e){
     const c=e&&e.code;
     say(c==='declined'?'Сохранение отменено':c==='rate_limited'?'Подождите пару секунд и нажмите ещё раз':c==='host_unavailable'?'В этом приложении нельзя сохранять файлы — откройте сайт в браузере':e&&e.message==='script'?'Не удалось загрузить модуль PDF — проверьте интернет':'Не удалось сохранить PDF');
@@ -1176,6 +1183,7 @@ function terms(){
 
 /* ---------- routing ---------- */
 document.addEventListener('click',e=>{
+  const tl=e.target.closest('a[href^="tel:"]'); if(tl) track('call');
   const cp=e.target.closest('[data-copy]'); if(cp){ const v=cp.dataset.copy, ok=()=>{cp.textContent='Скопировано'; setTimeout(()=>cp.textContent='Копировать',1800)}; try{navigator.clipboard.writeText(v).then(ok,()=>{cp.textContent=v})}catch(_){cp.textContent=v} return; }
   const hm=e.target.closest('a[href="#home"]'); if(hm){e.preventDefault(); const lw=document.getElementById('lwrap'); if(lw&&lw.classList.contains('on')) document.getElementById('lfull').click(); if(location.hash==='#home'||location.hash===''){render(); scrollTo(0,0);} else location.hash='home'; return;}
   const tf=e.target.closest('[data-tf]'); if(tf){tfilter=tf.dataset.tf; if(location.hash==='#terms') terms(); else location.hash='terms'; return;}
