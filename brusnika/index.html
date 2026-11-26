@@ -92,6 +92,8 @@ a.tile:hover{filter:brightness(.97)}
 .mapctl button{width:40px;height:40px;border:0;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(1,46,69,.18);font-size:22px;font-weight:700;color:var(--ink)}
 .attrib{position:absolute;right:20px;bottom:16px;font-size:11px;background:rgba(255,255,255,.85);border-radius:6px;padding:1px 6px;color:var(--muted)}
 .card.ag{border:1px solid var(--red)}
+.sitelink{align-self:flex-start;margin-top:6px;background:var(--blue-soft);color:var(--blue);font-weight:700;border-radius:18px;padding:9px 16px;text-decoration:none;font-size:15px}
+.sitelink:hover{background:var(--blue);color:#fff}
 .mgr{background:var(--card);border-radius:26px;padding:22px 24px;display:flex;flex-direction:column;gap:14px}
 .mg-sub{font-weight:700;font-size:14px;color:var(--muted);margin-top:2px}
 .mg.pt{background:var(--blue-soft)}
@@ -666,7 +668,7 @@ function popHtml(p){
     <div class="metro">${p.metro.map(m=>`<span><i style="background:${m[1]}"></i>${m[0]}</span>`).join('')}</div>
     <div class="lpf num"><div><small>Цена от</small><b>${mln(st.min)} млн ₽</b></div><div><small>В продаже</small><b>${st.n} кв.</b></div><div><small>Бронь · 10 дней</small><b>${fmt(BOOK(p.slug))}</b></div><div><small>Сдача</small><b>${st.del.map(d=>d.replace(' квартал',' кв.')).join(', ')}</b></div></div>
     <div class="chips">${ag}${(HOOK[p.slug]||[]).slice(0,2).map(h=>`<span class="tg b">${h}</span>`).join('')}</div>
-    <div class="pbtns"><a class="btn btn-main" href="#p-${p.slug}">Квартиры ›</a><button class="btn btn-soft" data-tf="${p.slug}">Условия</button></div></div>`;
+    <div class="pbtns"><a class="btn btn-main" href="#p-${p.slug}">Квартиры ›</a><button class="btn btn-soft" data-tf="${p.slug}">Условия</button><a class="btn btn-soft" href="https://moskva.brusnika.ru/projects/${p.slug}/" target="_blank" rel="noopener">На сайте Брусники ↗</a></div></div>`;
 }
 function initMap(){
   const el=document.getElementById('lmap'); if(!el) return;
@@ -759,7 +761,7 @@ function pcard(p){
     </div>
     ${st?`<div class="rooms">${st.rooms.map(([r,n])=>`<span>${r===4?'4С+':RT_SHORT(r)} · ${n}</span>`).join('')}</div>`:''}
     <div class="chips">${p.slug==='izdanie'&&AGENT>0?`<span class="tg ag">Скидка ${AGS}% · только дом 1</span>`:agentOk(p.slug)?`<span class="tg ag">Скидка агента ${AGS}%</span>`:`<span class="tg g">Без скидки агента</span>`}${HOOK[p.slug].map((h,i)=>`<span class="tg${i?' b':''}">${h}</span>`).join('')}</div>
-    <div class="pbtns">${p.off?`<span class="fine">Квартиры этого ЖК не загружены</span>`:`<a class="btn btn-main" href="#p-${p.slug}">Квартиры ›</a>`}<button class="btn btn-soft" data-tf="${p.slug}">Условия</button></div>
+    <div class="pbtns">${p.off?`<span class="fine">Квартиры этого ЖК не загружены</span>`:`<a class="btn btn-main" href="#p-${p.slug}">Квартиры ›</a>`}<button class="btn btn-soft" data-tf="${p.slug}">Условия</button><a class="btn btn-soft" href="https://moskva.brusnika.ru/projects/${p.slug}/" target="_blank" rel="noopener">На сайте Брусники ↗</a></div>
   </article>`;
 }
 
@@ -801,6 +803,7 @@ function projHead(slug,p,L,st,blds,terms){
         <p>${esc(p.place.replace(/^Москва, |^МО, /,''))}, ${p.place.startsWith('МО')?'Московская область':'Москва'} · ${p.metro.map(m=>m[0]).join(', ')}</p>
         <p>Квартиры ${blds.length>1?'в корпусах '+bl:'в корпусе '+bl} · ${st.n} в продаже · от ${mln(st.min)} млн ₽ · бронь ${fmt(BOOK(slug))} на 10 дней</p>
         <p class="terms-line">${[...new Set(terms)].join(' · ')||'Условия реализации уточняются'} · без удорожания</p>
+        <a class="sitelink" href="https://moskva.brusnika.ru/projects/${slug}/" target="_blank" rel="noopener">Открыть ЖК на сайте Брусники ↗</a>
       </div>
       <div class="phead-stats num">
         <div class="tile t-blue"><b>${st.n}</b><span>квартир в продаже</span></div>
@@ -817,7 +820,7 @@ function projHead(slug,p,L,st,blds,terms){
       <h2 class="h-big" style="font-size:clamp(30px,4vw,46px)">${esc(p.name)}</h2>
       <p class="fine" style="font-size:15px">${esc(p.place)}</p>
       <p>${esc(M.desc||p.intro)}</p>
-      <div class="pbtns"><button type="button" class="btn btn-blue" data-goto="flist">Выбрать квартиру</button><button type="button" class="btn btn-soft" data-gal="0">Открыть галерею</button></div>
+      <div class="pbtns"><button type="button" class="btn btn-blue" data-goto="flist">Выбрать квартиру</button><button type="button" class="btn btn-soft" data-gal="0">Открыть галерею</button><a class="btn btn-soft" href="https://moskva.brusnika.ru/projects/${slug}/" target="_blank" rel="noopener">На сайте Брусники ↗</a></div>
     </div>
     <div class="mosaic">
       ${ph[1]?`<button type="button" class="mz big" data-gal="1"><img src="${ph[1]}" alt="" loading="lazy"><span>Проект</span></button>`:''}
