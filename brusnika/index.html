@@ -1056,7 +1056,7 @@ function pdfHtml(f){
     <div class="pd-flat"><div class="pd-plan">${f.img&&PL[f.img]?`<img src="${PL[f.img]}" alt="">`:'<span>Планировка — на сайте застройщика</span>'}</div>
       <div class="pd-info"><div class="pd-ft">${RT(f.r)}, ${area(f.a)}</div>
         <div class="pd-kv"><div><small>Этаж</small><b>${f.fl} из ${f.ff}</b></div><div><small>Площадь</small><b>${area(f.a)}</b></div><div><small>За м²</small><b>${fmt(Math.round((f.ag||f.final)/f.a))}</b></div></div>
-        <div class="pd-prices">${pr('Стоимость брони (срок 10 дней)',fmt(BOOK(p.slug)))}${pr('Базовая цена',`<s>${fmt(f.base)}</s>`)}${f.promo?pr(f.pt==='anti_auction'?'Антиаукцион':'Цена по акции до '+ddmm(f.pd),fmt(f.promo)):''}
+        <div class="pd-prices">${pr('Стоимость брони (срок 10 дней)',fmt(BOOK(p.slug)))}${pr('Базовая цена сайта',`<s>${fmt(f.base)}</s>`)}${pr(f.promo?(f.pt==='anti_auction'?'Цена сайта со скидкой (антиаукцион)':'Цена сайта со скидкой (акция до '+ddmm(f.pd)+')'):'Цена сайта со скидкой',fmt(f.final),'red')}
           ${f.ag?pr(`Цена со скидкой агента ${AGS}%`,fmt(f.ag),'ag'):pr('Итоговая цена',fmt(f.final),'fin')}</div>
         ${f.bk?'<div class="warn">Квартира забронирована на сайте застройщика.</div>':''}</div></div>
     ${CALC_FOR(f)?`<div class="pd-h">Расчёты</div>${calcHtml(f,true)}`:''}
