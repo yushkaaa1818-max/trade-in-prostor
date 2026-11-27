@@ -1,0 +1,43 @@
+name: Обновление квартир Брусники
+
+on:
+  schedule:
+    # 10:00, 15:00 и 21:00 по Москве (UTC+3)
+    - cron: '7 7,12,18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: brusnika-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Установить зависимости
+        run: pip install pillow cairosvg
+
+      - name: Выгрузить квартиры с сайта Брусники
+        run: python3 brusnika/tools/update.py
+
+      - name: Сохранить изменения
+        run: |
+          git config user.name "brusnika-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add brusnika/flats.json brusnika/plans
+          if git diff --cached --quiet; then
+            echo "Изменений нет"
+          else
+            git commit -m "Брусника: автообновление квартир"
+            git push
+          fi
