@@ -144,7 +144,7 @@ h1{font-family:var(--display);font-weight:400;font-size:clamp(26px,3.4vw,34px);m
 .stats{max-width:100%}
 .stats h3{margin:6px 0 0;font-family:var(--display);font-weight:700;font-size:20px}
 .stats .sub{margin:0;color:var(--muted);max-width:62ch}
-.stiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .stiles div{background:var(--blue-soft);border-radius:22px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
 .stiles b{font-family:var(--display);font-size:40px;line-height:1}
 .stiles span{color:var(--muted)}
@@ -154,6 +154,7 @@ h1{font-family:var(--display);font-weight:400;font-size:clamp(26px,3.4vw,34px);m
 .stable td{padding:12px 16px;border-top:1px solid var(--line)}
 .stable a{color:var(--blue);text-decoration:none}
 .foot a{color:var(--muted)}
+@media (max-width:900px){.stiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:620px){.stiles{grid-template-columns:1fr}}
 .pdf{width:794px;height:1120px;overflow:hidden;padding:48px 56px;background:#fff;color:#012e45;font-family:var(--text);display:flex;flex-direction:column;gap:14px}
 .pdf .ph{display:flex;align-items:center;gap:10px;border-bottom:1px solid #dce5ec;padding-bottom:14px}
@@ -384,7 +385,7 @@ function card(f){
       </div>
     </div>
     </a>
-    <a class="site-link" href="${lsr(f)}" target="_blank" rel="noopener">Открыть на сайте ↗</a>
+    <a class="site-link" data-site="${f.n}" href="${lsr(f)}" target="_blank" rel="noopener">Открыть на сайте ↗</a>
   </article>`;
 }
 
@@ -408,7 +409,7 @@ function detailView(f){
   app.innerHTML = `
   <div class="back-row">
     <a class="pill" href="#">‹ Все квартиры</a>
-    <a class="pill" href="${lsr(f)}" target="_blank" rel="noopener">Квартира на сайте ЛСР ↗</a>
+    <a class="pill" data-site="${f.n}" href="${lsr(f)}" target="_blank" rel="noopener">Квартира на сайте ЛСР ↗</a>
   </div>
   <section class="detail">
     <div class="panel">${planBox(f,'dplan')}</div>
@@ -519,7 +520,7 @@ function statsView(){
   <section class="panel stats">
     <span class="eyebrow">Отчёт владельца</span>
     <h2>Статистика сайта</h2>
-    <p class="sub">Считаются загрузки сайта, открытия карточек и скачивания PDF. IP-адреса и контактные данные посетителей не сохраняются.</p>
+    <p class="sub">Считаются загрузки сайта, открытия карточек, скачивания PDF и переходы на сайт ЛСР. IP-адреса и контактные данные посетителей не сохраняются.</p>
     <p class="sub">После входа код не потребуется вводить повторно в этом браузере в течение суток.</p>
     <form id="sf" class="copy-row" ${getCode()?'hidden':''}>
       <input class="search" id="scode" type="password" autocomplete="off" placeholder="Код владельца" aria-label="Код владельца">
@@ -544,7 +545,7 @@ function statsView(){
 
 function statsHtml(r){
   const t = r.totals || {}, num = v => (v||0).toLocaleString('ru-RU');
-  const flats = Object.entries(r.flats||{}).map(([n,v])=>({n,...v})).sort((a,b)=>(b.card+b.pdf)-(a.card+a.pdf)||a.n-b.n);
+  const flats = Object.entries(r.flats||{}).map(([n,v])=>({n,...v})).sort((a,b)=>(b.card+b.pdf+(b.site||0))-(a.card+a.pdf+(a.site||0))||a.n-b.n);
   const days = Object.entries(r.days||{}).sort((a,b)=>b[0].localeCompare(a[0]));
   const label = n => { const f=FLATS.find(x=>x.n===+n); return `Кв. ${esc(n)}${f?` · ${TYPE_SHORT[f.r]}, ${area(f.area)}`:''}`; };
   const upd = r.updated ? new Date(r.updated).toLocaleString('ru-RU') : '';
@@ -554,14 +555,15 @@ function statsHtml(r){
       <div><b>${num(t.visit)}</b><span>Посещения сайта</span></div>
       <div><b>${num(t.card)}</b><span>Открытия карточек</span></div>
       <div><b>${num(t.pdf)}</b><span>Скачивания PDF</span></div>
+      <div><b>${num(t.site)}</b><span>Переходы на сайт ЛСР</span></div>
     </div>
     <h3>По квартирам</h3>
-    <div class="twrap"><table class="stable num"><thead><tr><th>Квартира</th><th>Просмотры</th><th>PDF</th></tr></thead><tbody>
-      ${flats.length?flats.map(f=>`<tr><td><a href="#kv-${esc(f.n)}">${label(f.n)}</a></td><td>${num(f.card)}</td><td>${num(f.pdf)}</td></tr>`).join(''):'<tr><td colspan="3">Пока нет просмотров</td></tr>'}
+    <div class="twrap"><table class="stable num"><thead><tr><th>Квартира</th><th>Просмотры</th><th>PDF</th><th>На сайт ЛСР</th></tr></thead><tbody>
+      ${flats.length?flats.map(f=>`<tr><td><a href="#kv-${esc(f.n)}">${label(f.n)}</a></td><td>${num(f.card)}</td><td>${num(f.pdf)}</td><td>${num(f.site)}</td></tr>`).join(''):'<tr><td colspan="4">Пока нет просмотров</td></tr>'}
     </tbody></table></div>
     <h3>По дням</h3>
-    <div class="twrap"><table class="stable num"><thead><tr><th>Дата</th><th>Посещения</th><th>Карточки</th><th>PDF</th></tr></thead><tbody>
-      ${days.length?days.map(([d,v])=>`<tr><td>${esc(d.split('-').reverse().join('.'))}</td><td>${num(v.visit)}</td><td>${num(v.card)}</td><td>${num(v.pdf)}</td></tr>`).join(''):'<tr><td colspan="4">Пока нет данных</td></tr>'}
+    <div class="twrap"><table class="stable num"><thead><tr><th>Дата</th><th>Посещения</th><th>Карточки</th><th>PDF</th><th>На сайт ЛСР</th></tr></thead><tbody>
+      ${days.length?days.map(([d,v])=>`<tr><td>${esc(d.split('-').reverse().join('.'))}</td><td>${num(v.visit)}</td><td>${num(v.card)}</td><td>${num(v.pdf)}</td><td>${num(v.site)}</td></tr>`).join(''):'<tr><td colspan="5">Пока нет данных</td></tr>'}
     </tbody></table></div>
     <div class="copy-row">
       ${/^https:\/\//.test(r.sheetUrl||'')?`<a class="btn btn-soft" href="${esc(r.sheetUrl)}" target="_blank" rel="noopener">Открыть Google-таблицу ↗</a>`:''}
@@ -584,6 +586,7 @@ window.addEventListener('hashchange', ()=>{
   if(!goingDetail && location.hash!=='#stats') window.scrollTo(0,lastScroll);
 });
 track('visit');
+document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a[data-site]'); if(a) track('site', a.dataset.site); });
 render();
 </script>
 
