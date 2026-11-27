@@ -600,7 +600,17 @@ const YM_ID = 0;
 if(YM_ID){ (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();
   k=e.createElement(t);a=e.getElementsByTagName(t)[0];k.async=1;k.src=r;a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
   ym(YM_ID,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,trackHash:true}); }
-const track=(goal,params)=>{ try{ if(YM_ID&&window.ym) ym(YM_ID,'reachGoal',goal,params||{}); }catch(e){} };
+/* Счётчики без регистрации (abacus.jasoncameron.dev) */
+const CNT_NS='prostor-brusnika-agents-7f3k', CNT='https://abacus.jasoncameron.dev';
+const hit=key=>{ try{ fetch(`${CNT}/hit/${CNT_NS}/${key}`,{keepalive:true,mode:'cors'}).catch(()=>{}); }catch(e){} };
+const isStats=()=>location.hash==='#stats';
+(function(){ if(isStats()) return;
+  try{ if(!sessionStorage.getItem('bz-v')){ sessionStorage.setItem('bz-v','1'); hit('visits'); } }catch(e){ hit('visits'); }
+  try{ if(!localStorage.getItem('bz-u')){ localStorage.setItem('bz-u','1'); hit('visitors'); } }catch(e){}
+})();
+const track=(goal,params)=>{ try{ if(YM_ID&&window.ym) ym(YM_ID,'reachGoal',goal,params||{}); }catch(e){}
+  if(goal==='pdf'){ hit('pdf'); if(params&&params.slug) hit('pdf-'+params.slug); }
+  if(goal==='call') hit('call'); };
 const BOOK = slug => (slug==='mons'||slug==='izdanie') ? 50000 : 30000;
 const AGENT=(()=>{let v=3; for(const [d,pc] of AG_SCHED) if(AG_TODAY>=d) v=pc; return v;})();
 const AGS=String(AGENT).replace('.',',');
@@ -1086,8 +1096,8 @@ async function savePdf(f,btn,msg){
     const blob=pdf.output('blob'); const p=BY_ID[f.c];
     const name=`Расчёт ${p.name.replace(/[«»"]/g,'')} ${RT(f.r)} ${String(f.a).replace('.',',')} м2 ${f.b} эт ${f.fl}.pdf`;
     const dl=await dlp;
-    if(!dl){ const u=URL.createObjectURL(blob), ln=document.createElement('a'); ln.href=u; ln.download=name; document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(()=>URL.revokeObjectURL(u),10000); say('PDF сохранён'); track('pdf',{jk:BY_ID[f.c].name}); return; }
-    await dl.save({filename:name,data:blob}); say('PDF сохранён'); track('pdf',{jk:BY_ID[f.c].name});
+    if(!dl){ const u=URL.createObjectURL(blob), ln=document.createElement('a'); ln.href=u; ln.download=name; document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(()=>URL.revokeObjectURL(u),10000); say('PDF сохранён'); track('pdf',{jk:BY_ID[f.c].name,slug:BY_ID[f.c].slug}); return; }
+    await dl.save({filename:name,data:blob}); say('PDF сохранён'); track('pdf',{jk:BY_ID[f.c].name,slug:BY_ID[f.c].slug});
   }catch(e){
     const c=e&&e.code;
     say(c==='declined'?'Сохранение отменено':c==='rate_limited'?'Подождите пару секунд и нажмите ещё раз':c==='host_unavailable'?'В этом приложении нельзя сохранять файлы — откройте сайт в браузере':e&&e.message==='script'?'Не удалось загрузить модуль PDF — проверьте интернет':'Не удалось сохранить PDF');
@@ -1181,6 +1191,20 @@ function terms(){
   app.querySelectorAll('.blkjump').forEach(b=>b.onclick=()=>{const el=document.getElementById('blk-'+b.dataset.blk); if(el) el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})});
 }
 
+/* ---------- статистика ---------- */
+async function statsView(){
+  app.innerHTML=`<section class="hero-main" style="border-radius:26px"><span class="eyebrow">Статистика сайта</span><h1>Заходы и скачивания</h1><p>Считается с 27.11.2026. Обновите страницу, чтобы увидеть свежие цифры.</p></section><div class="empty" id="stbox">Загружаю цифры…</div>`;
+  const keys=['visitors','visits','pdf','call',...PROJ.map(p=>'pdf-'+p.slug)];
+  const vals=await Promise.all(keys.map(k=>fetch(`${CNT}/get/${CNT_NS}/${k}`).then(r=>r.ok?r.json():{value:0}).then(d=>Math.max(0,d.value||0)).catch(()=>null)));
+  const v=Object.fromEntries(keys.map((k,i)=>[k,vals[i]])); const n=x=>x==null?'—':x.toLocaleString('ru-RU');
+  document.getElementById('stbox').outerHTML=`<section class="tiles" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+    <div class="tile t-blue" style="grid-column:auto"><b>${n(v.visitors)}</b><span>уникальных посетителей (агентов)</span></div>
+    <div class="tile t-sky" style="grid-column:auto"><b>${n(v.visits)}</b><span>заходов на сайт</span></div>
+    <div class="tile t-peach" style="grid-column:auto"><b>${n(v.pdf)}</b><span>скачано PDF</span></div>
+    <div class="tile t-mint" style="grid-column:auto"><b>${n(v.call)}</b><span>нажатий «Позвонить»</span></div></section>
+    <section class="panel"><h3>Скачивания PDF по ЖК</h3><div class="tblwrap"><table><thead><tr><th>ЖК</th><th>PDF</th></tr></thead><tbody>${PROJ.map(p=>`<tr><td>${esc(p.name)}</td><td class="r">${n(v['pdf-'+p.slug])}</td></tr>`).join('')}</tbody></table></div>
+    <span class="fine">Уникальный посетитель — один браузер на одном устройстве. Заход — одно открытие сайта (повторные переходы по страницам в той же вкладке не считаются).</span></section>`;
+}
 /* ---------- routing ---------- */
 document.addEventListener('click',e=>{
   const tl=e.target.closest('a[href^="tel:"]'); if(tl) track('call');
@@ -1203,6 +1227,7 @@ function render(keep){
   document.title='Брусника для агентов';
   if(pr && BY_SLUG[pr[1]] && !BY_SLUG[pr[1]].off){route=h; projectView(pr[1]); loadPlans(pr[1]);}
   else if(h==='terms'){route='terms'; terms();}
+  else if(h==='stats'){route='stats'; statsView();}
   else home();
   nav(route);
   scrollTo(0, lastRoute.startsWith('kv-') && scrolls[h]!=null ? scrolls[h] : 0);
